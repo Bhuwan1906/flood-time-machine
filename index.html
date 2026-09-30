@@ -73,6 +73,7 @@
       <div><dt>water depth</dt><dd id="fact-depth">–</dd></div>
       <div><dt>floods when</dt><dd id="fact-rain">–</dd></div>
       <div title="Estimated residents on this 100 m cell, from building footprints at Census-anchored occupancy."><dt>residents here</dt><dd id="fact-pop">–</dd></div>
+      <div title="Hospitals, clinics, schools, colleges, police, fire stations, shelters within this 100 m cell."><dt>critical sites</dt><dd id="fact-crit">–</dd></div>
     </dl>
     <p class="hint" id="wetland-note" hidden></p>
   </section>
@@ -109,10 +110,13 @@
     <div class="panel-label">Exposed in <span id="exposure-year">Today</span></div>
     <div class="expo-rows">
       <div class="expo-row"><span class="expo-name">residents</span><span class="expo-val" id="expo-people">–</span></div>
+      <div class="expo-row expo-sub"><span class="expo-name">in ≥ 60 cm water</span><span class="expo-val expo-severe" id="expo-people-severe">–</span></div>
       <div class="expo-row"><span class="expo-name">buildings</span><span class="expo-val" id="expo-buildings">–</span></div>
       <div class="expo-row"><span class="expo-name">roads</span><span class="expo-val" id="expo-roads">–</span></div>
-      <div class="expo-row"><span class="expo-name">cells wet</span><span class="expo-val" id="expo-cells">–</span></div>
+      <div class="expo-row"><span class="expo-name">critical sites</span><span class="expo-val" id="expo-crit">–</span></div>
+      <div class="expo-row expo-sub"><span class="expo-name">in ≥ 60 cm water</span><span class="expo-val expo-severe" id="expo-crit-severe">–</span></div>
     </div>
+    <div class="expo-trend" id="expo-trend" title="Exposed residents per year, 2005 to 2070"></div>
     <p class="hint">Citywide, in this year's modelled water: ≥ 15 cm = affected, ≥ 60 cm = severe (waist-deep). Tap a year to re-count.</p>
   </section>
 </aside>

@@ -99,6 +99,7 @@ export function readCell(tile, index) {
     pop: num(F.POP),
     bldc: num(F.BLDC),
     roadd: num(F.ROADD),
+    crit: num(F.CRIT),
     years: tile.years,
   };
 }

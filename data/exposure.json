@@ -10,7 +10,8 @@
     "people": 3309058,
     "buildings": 379610,
     "roadKm": 20464.8,
-    "cellsScored": 107071
+    "crit": 2675,
+    "cellsScored": 107116
   },
   "years": [
     {
@@ -22,7 +23,9 @@
       "buildingsSevere": 17295,
       "roadKm": 2705.4,
       "roadKmSevere": 1275.6,
-      "cells": 14278
+      "crit": 111,
+      "critSevere": 46,
+      "cells": 14281
     },
     {
       "key": "2015",
@@ -33,7 +36,9 @@
       "buildingsSevere": 38960,
       "roadKm": 3019.5,
       "roadKmSevere": 1380.8,
-      "cells": 14580
+      "crit": 590,
+      "critSevere": 246,
+      "cells": 14584
     },
     {
       "key": "2020",
@@ -44,6 +49,8 @@
       "buildingsSevere": 1659,
       "roadKm": 91.2,
       "roadKmSevere": 47.8,
+      "crit": 9,
+      "critSevere": 6,
       "cells": 356
     },
     {
@@ -55,7 +62,9 @@
       "buildingsSevere": 89535,
       "roadKm": 5794.1,
       "roadKmSevere": 2937.5,
-      "cells": 26845
+      "crit": 1111,
+      "critSevere": 586,
+      "cells": 26862
     },
     {
       "key": "2070",
@@ -66,7 +75,9 @@
       "buildingsSevere": 95636,
       "roadKm": 4325.1,
       "roadKmSevere": 3011.2,
-      "cells": 19564
+      "crit": 932,
+      "critSevere": 624,
+      "cells": 19580
     }
   ]
 }

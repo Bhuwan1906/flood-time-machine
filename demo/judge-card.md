@@ -38,7 +38,9 @@ No ML anywhere. Every cell's score is explainable in 30 seconds. Weights live in
 
 **Other proven numbers:** Taramani 5.6 → **4.7** with wetlands · SRM campus **1.4** at 35 m (the control) · worst cell citywide **9.1** · depth "1.60 m — above waist" · rainfall receipts per stop (2005: 521.7 mm · 2015: 485.4 mm · 2020: 438.6 mm · today's design storm: Michaung 379.2 mm, 255.8 mm worst day).
 
-**EXPOSURE (challenge 4.4 — affected infrastructure statistics):** in ≥15 cm of modelled water — **2015: ~7.4 lakh people · 91,888 buildings · 3,019 km roads · Today: ~14.8 lakh residents in hazard zones · 2070: ~12.4 lakh people, 4,325 km roads.** Severe tier (≥60 cm) counted separately. "Who is exposed, per year — not just how deep."
+**EXPOSURE (challenge 4.4 — affected infrastructure statistics):** in ≥15 cm of modelled water — **2015: ~7.4 lakh people · 91,888 buildings · 3,019 km roads · Today: ~14.8 lakh residents in hazard zones · 2070: ~12.4 lakh people, 4,325 km roads.** Severe tier (≥60 cm) shown beside each. "Who is exposed, per year — not just how deep."
+
+**CRITICAL SITES (the line that lands):** **Today: 1,111 hospitals, clinics, schools, colleges, police stations, fire stations and shelters sit inside the city's own hazard zones — 586 of them in ≥60 cm water.** 2015: 590 · 2070: 932. Say it as: "over a thousand critical facilities are where the water goes."
 
 ---
 
@@ -64,7 +66,7 @@ No ML anywhere. Every cell's score is explainable in 30 seconds. Weights live in
 
 10. **"Who is it for?"** → Residents, journalists, ward officers — anyone who needs their street's risk in 10 seconds. Public data, MIT license; if GCC built this themselves, we'd have won.
 
-11. **"Where do the population numbers come from?"** → A Census-anchored footprint model, labelled as such: building footprints ÷ 85 m² per household × 3.51 persons (Census 2011 TN). No street-level census exists in India; ours is a comparison tool across years and streets, and it says so on screen.
+11. **"Where do the population numbers come from?"** → A gridded estimate, labelled as such: building footprints ÷ 85 m² per household × 3.51 persons (Census 2011 TN). WorldPop/GHSL rasters are coarser than a city block; no street-level census exists in India. Ours is a comparison tool across years and streets — and the footer credits it as an estimate, not a census.
 
 ---
 

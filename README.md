@@ -90,9 +90,17 @@ residents on the selected street.
 Population is a **model, and it says so**: India publishes no street-level population raster, so
 residents are estimated from measured OpenStreetMap building footprints at a Census-anchored
 occupancy — one household per ~85 m² of footprint, 3.51 persons per household (Census 2011 Tamil
-Nadu average). It reads as population present on an average day, not an exact count. Citywide it
-lands at ≈ 33 lakh people and ≈ 3.8 lakh buildings across the scored cells, which sanity-checks
-against Chennai's population.
+Nadu average). Published gridded-population rasters (WorldPop, GHSL) were considered and rejected:
+at their resolution a single cell swallows several city blocks, which is exactly the district-level
+blur this product exists to remove. The estimate is credited in the footer as a gridded estimate,
+not a census. Citywide it lands at ≈ 33 lakh people and ≈ 3.8 lakh buildings across the scored
+cells, which sanity-checks against Chennai's population.
+
+Each cell also counts its **critical facilities** — hospitals, clinics, schools, colleges,
+universities, kindergartens, police stations, fire stations, relief shelters and community centres
+(2,715 across the region, from the OSM `pois` layer). The exposure panel reports how many sit in
+each year's water, alongside the severe (≥ 60 cm) tier: today that is **1,111 critical sites in
+the city's own hazard zones, 586 of them in waist-deep water or deeper.**
 
 ## The data
 

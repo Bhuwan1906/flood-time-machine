@@ -89,10 +89,12 @@ if (!exposure) {
     const y = byKey[year.key];
     if (!y) problems.push(`exposure.json has no entry for ${year.key}`);
     else if (typeof y.people !== 'number' || typeof y.roadKm !== 'number') problems.push(`exposure entry for ${year.key} is malformed`);
+    else if (typeof y.crit !== 'number') problems.push(`exposure entry for ${year.key} lacks critical-site counts — re-run pipeline/11-exposure.mjs`);
   }
   if (exposure.years?.length === scoreIndex.years.length) {
     const worst = exposure.years.reduce((a, b) => (b.people > a.people ? b : a));
-    ok.push(`exposure stats for all ${exposure.years.length} years (worst: ${worst.label}, ${worst.people.toLocaleString('en-IN')} people in ≥15 cm water)`);
+    const critTotal = exposure.cityTotals?.crit ?? 0;
+    ok.push(`exposure stats for all ${exposure.years.length} years (worst: ${worst.label}, ${worst.people.toLocaleString('en-IN')} people, ${critTotal.toLocaleString('en-IN')} critical facilities citywide)`);
   }
 }
 
@@ -151,6 +153,7 @@ function lookup(lon, lat) {
     depths: [0, 1, 2, 3, 4].map((k) => tile.c[o + fields.DEPTH + k] / 100),
     wetland: tile.c[o + fields.WET],
     pop: fields.POP !== undefined ? tile.c[o + fields.POP] : null,
+    crit: fields.CRIT !== undefined ? tile.c[o + fields.CRIT] : null,
   };
 }
 
@@ -164,7 +167,7 @@ for (const area of demoFile.areas) {
     continue;
   }
   if (cell.masked) problems.push(`${area.label}: the preset lands on a masked cell (sea, river or marsh)`);
-  const line = `${area.label}: scores ${cell.scores.map((s) => s.toFixed(1)).join(' / ')} · ground ${cell.elev} m · residents ≈${cell.pop ?? '?'} · wetland term ${cell.wetland}%`;
+  const line = `${area.label}: scores ${cell.scores.map((s) => s.toFixed(1)).join(' / ')} · ground ${cell.elev} m · residents ≈${cell.pop ?? '?'} · critical sites ${cell.crit ?? '?'} · wetland term ${cell.wetland}%`;
   log(`  ${line}`);
   ok.push(line);
 }

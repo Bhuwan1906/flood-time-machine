@@ -28,10 +28,11 @@ for (const year of index.years) {
     people: 0, peopleSevere: 0,
     buildings: 0, buildingsSevere: 0,
     roadM: 0, roadMSevere: 0,
+    crit: 0, critSevere: 0,
     cells: 0,
   });
 }
-const totals = { people: 0, buildings: 0, roadM: 0, cellsScored: 0 };
+const totals = { people: 0, buildings: 0, roadM: 0, crit: 0, cellsScored: 0 };
 
 const xDirs = fs.existsSync(scoreDir) ? fs.readdirSync(scoreDir) : [];
 let tilesRead = 0;
@@ -54,10 +55,12 @@ for (const x of xDirs) {
       const pop = tile.c[o + F.POP] || 0;
       const bldc = tile.c[o + F.BLDC] || 0;
       const roadd = tile.c[o + F.ROADD] || 0;
-      if (pop <= 0 && bldc <= 0 && roadd <= 0) continue;
+      const crit = (F.CRIT !== undefined ? tile.c[o + F.CRIT] : 0) || 0;
+      if (pop <= 0 && bldc <= 0 && roadd <= 0 && crit <= 0) continue;
       totals.people += pop;
       totals.buildings += bldc;
       totals.roadM += roadd;
+      totals.crit += crit;
       totals.cellsScored++;
       for (let k = 0; k < 5; k++) {
         const depth = (tile.c[o + F.DEPTH + k] ?? 0) / 100;
@@ -67,11 +70,13 @@ for (const x of xDirs) {
         y.people += pop;
         y.buildings += bldc;
         y.roadM += roadd;
+        y.crit += crit;
         y.cells++;
         if (severe) {
           y.peopleSevere += pop;
           y.buildingsSevere += bldc;
           y.roadMSevere += roadd;
+          y.critSevere += crit;
         }
       }
     }
@@ -87,6 +92,8 @@ const years = [...perYear.values()].map((y) => ({
   buildingsSevere: Math.round(y.buildingsSevere),
   roadKm: Math.round(y.roadM / 100) / 10,
   roadKmSevere: Math.round(y.roadMSevere / 100) / 10,
+  crit: Math.round(y.crit),
+  critSevere: Math.round(y.critSevere),
   cells: y.cells,
 }));
 
@@ -102,6 +109,7 @@ const out = {
     people: Math.round(totals.people),
     buildings: Math.round(totals.buildings),
     roadKm: Math.round(totals.roadM / 100) / 10,
+    crit: Math.round(totals.crit),
     cellsScored: totals.cellsScored,
   },
   years,
@@ -109,7 +117,7 @@ const out = {
 const size = writeJson('data/exposure.json', out, true);
 log(`tiles read: ${tilesRead}`);
 for (const y of years) {
-  log(`  ${y.label.padEnd(6)} people ${y.people.toLocaleString('en-IN').padStart(10)} · buildings ${String(y.buildings).padStart(6)} · road ${y.roadKm} km`);
+  log(`  ${y.label.padEnd(6)} people ${y.people.toLocaleString('en-IN').padStart(10)} · buildings ${String(y.buildings).padStart(6)} · road ${y.roadKm} km · critical sites ${y.crit} (${y.critSevere} severe)`);
 }
 log(`city totals: ${out.cityTotals.people.toLocaleString('en-IN')} people · ${out.cityTotals.buildings.toLocaleString('en-IN')} buildings · ${out.cityTotals.roadKm} km road`);
 log(`wrote data/exposure.json (${(size / 1024).toFixed(1)} KB)`);

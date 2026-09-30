@@ -87,7 +87,7 @@ async function boot() {
 }
 
 function renderAttribution(attribution) {
-  const fallback = 'Flood extents: NRSC / GCC via opencity.in · Elevation: AWS Terrain Tiles · Rainfall: Open-Meteo · Buildings, roads, names: © OpenStreetMap contributors (ODbL) · Basemap tiles: Protomaps · Wards: datameet (CC-BY)';
+  const fallback = 'Flood extents: NRSC / GCC via opencity.in · Elevation: AWS Terrain Tiles · Rainfall: Open-Meteo · Buildings, roads, critical sites: © OpenStreetMap contributors (ODbL) · Population: gridded estimate from OSM footprints × Census 2011 TN occupancy · Basemap tiles: Protomaps · Wards: datameet (CC-BY)';
   if (!attribution) {
     $('attribution-text').textContent = fallback;
     return;
@@ -301,17 +301,19 @@ function hideResults() {
 
 // ---------------------------------------------------------------- year + score
 let exposureByYear = {};
+let exposureOrder = [];
 
-function shortNum(n) {
+function lakhNum(n) {
   if (n >= 10000000) return `${(n / 10000000).toFixed(1)} Cr`;
-  if (n >= 100000) return `${(n / 100000).toFixed(n >= 1000000 ? 1 : 2)} L`;
-  if (n >= 1000) return `${(n / 1000).toFixed(n >= 10000 ? 0 : 1)}k`;
-  return String(n);
+  if (n >= 100000) return `${(n / 100000).toFixed(1)} L`;
+  return n.toLocaleString('en-IN');
 }
 
 async function loadExposure() {
   try {
-    exposureByYear = Object.fromEntries((await (await fetch('data/exposure.json')).json()).years.map((y) => [y.key, y]));
+    const data = await (await fetch('data/exposure.json')).json();
+    exposureByYear = Object.fromEntries(data.years.map((y) => [y.key, y]));
+    exposureOrder = data.years.map((y) => y.key);
   } catch {
     exposureByYear = {};
   }
@@ -321,10 +323,32 @@ function updateExposurePanel() {
   const year = state.years[state.yearIndex];
   const y = exposureByYear[year.key];
   $('exposure-year').textContent = year.label.split('—')[0].trim();
-  $('expo-people').textContent = y ? shortNum(y.people) : '–';
+  $('expo-people').textContent = y ? lakhNum(y.people) : '–';
+  $('expo-people-severe').textContent = y && y.peopleSevere ? lakhNum(y.peopleSevere) : '—';
   $('expo-buildings').textContent = y ? y.buildings.toLocaleString('en-IN') : '–';
   $('expo-roads').textContent = y ? `${y.roadKm.toLocaleString('en-IN')} km` : '–';
-  $('expo-cells').textContent = y ? y.cells.toLocaleString('en-IN') : '–';
+  $('expo-crit').textContent = y ? y.crit.toLocaleString('en-IN') : '–';
+  $('expo-crit-severe').textContent = y && y.critSevere ? y.critSevere.toLocaleString('en-IN') : '—';
+  renderExposureTrend();
+}
+
+function renderExposureTrend() {
+  const wrap = $('expo-trend');
+  if (!wrap) return;
+  const vals = exposureOrder.map((k) => exposureByYear[k]?.people || 0);
+  const max = Math.max(...vals, 1);
+  wrap.innerHTML = exposureOrder
+    .map((k, i) => {
+      const v = vals[i];
+      const h = Math.max(2, Math.round((v / max) * 100));
+      const active = state.years[state.yearIndex]?.key === k;
+      const y = exposureByYear[k];
+      return `<div class="trend-col${active ? ' active' : ''}" title="${y.label}: ${y.people.toLocaleString('en-IN')} residents in ≥15 cm water">
+        <div class="trend-bar" style="height:${h}%"></div>
+        <div class="trend-year">${y.label.toLowerCase()}</div>
+      </div>`;
+    })
+    .join('');
 }
 
 async function selectYear(index) {
@@ -438,6 +462,12 @@ function updateScorePanel() {
   $('fact-pop').textContent = cell.pop !== null && cell.pop !== undefined && cell.pop > 0
     ? `≈ ${Math.round(cell.pop).toLocaleString('en-IN')}`
     : (cell.bldc ? 'sparse' : '–');
+  const critLine = $('fact-crit');
+  if (critLine) {
+    critLine.textContent = cell.crit > 0
+      ? `${cell.crit} in this cell`
+      : 'none in this cell';
+  }
 
   const note = $('wetland-note');
   if (state.wetlands && cell.wetland > 0) {
@@ -467,6 +497,8 @@ function resetBars() {
   $('fact-rain').textContent = '–';
   const popEl = $('fact-pop');
   if (popEl) popEl.textContent = '–';
+  const critEl = $('fact-crit');
+  if (critEl) critEl.textContent = '–';
 }
 
 function updateRecenter() {
