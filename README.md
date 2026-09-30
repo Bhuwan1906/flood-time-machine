@@ -4,7 +4,7 @@
 
 Built for **GEO IMPATHON 1.0** at SRMIST, Chennai — domain: **Disaster Risk Analysis**.
 
-Live: _<add the deployed URL here>_ · Video: _<add the YouTube link here>_
+Live: **https://flood-time-machine.pages.dev** · Video: _<add the YouTube link here>_
 
 ---
 

@@ -1,0 +1,7 @@
+# Excluded from Cloudflare Pages deploys (same syntax as .gitignore)
+.cache
+node_modules
+.git
+*.log
+package-lock.json
+.wrangler
