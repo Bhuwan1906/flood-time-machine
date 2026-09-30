@@ -53,6 +53,28 @@ function pointInRing(lon, lat, ring) {
   }
   return inside;
 }
+// centroid per ward (for the clickable 'fly to worst ward' button) — area-weighted shoelace centroid
+function centroid(polys) {
+  let best = null;
+  let bestArea = 0;
+  for (const poly of polys) {
+    const ring = poly.outer;
+    let a = 0, cx = 0, cy = 0;
+    for (let i = 0, j = ring.length - 1; i < ring.length; j = i++) {
+      const cross = ring[j][0] * ring[i][1] - ring[i][0] * ring[j][1];
+      a += cross;
+      cx += (ring[j][0] + ring[i][0]) * cross;
+      cy += (ring[j][1] + ring[i][1]) * cross;
+    }
+    a /= 2;
+    if (Math.abs(a) > bestArea) {
+      bestArea = Math.abs(a);
+      best = a !== 0 ? [cx / (6 * a), cy / (6 * a)] : null;
+    }
+  }
+  return best;
+}
+
 function wardOf(lon, lat) {
   for (const w of wards) {
     for (const poly of w.polys) {
@@ -242,7 +264,7 @@ for (const xDir of fs.readdirSync(scoreDir)) {
 
 const years = index.years.map((y) => y.key);
 const wardRows = [...wardTable.values()].map((w) => {
-  const row = { ward: w.ward, zone: w.zone };
+  const row = { ward: w.ward, zone: w.zone, cx: null, cy: null };
   for (const key of years) {
     const y = w.years[key];
     row[`${key}_people`] = Math.round(y.people);
@@ -253,6 +275,14 @@ const wardRows = [...wardTable.values()].map((w) => {
   }
   return row;
 }).sort((a, b) => b.today_people - a.today_people);
+for (const row of wardRows) {
+  const w = wardTable.get(row.ward);
+  const wDef = wards.find((d) => d.ward === row.ward);
+  if (wDef) {
+    const c = centroid(wDef.polys);
+    if (c) { row.cx = Math.round(c[0] * 1000) / 1000; row.cy = Math.round(c[1] * 1000) / 1000; }
+  }
+}
 
 const out = {
   region: region.id,

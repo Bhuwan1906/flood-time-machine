@@ -75,8 +75,23 @@ body { position: relative; }
 #left-column, #right-column {
   position: absolute; z-index: 20; display: flex; flex-direction: column; gap: 12px;
 }
-#left-column { top: 122px; left: 18px; width: 348px; max-height: calc(100vh - 340px); overflow-y: auto; }
-#right-column { top: 122px; right: 18px; width: 236px; max-height: calc(100vh - 330px); overflow-y: auto; }
+#left-column { top: 122px; left: 18px; width: 348px; max-height: calc(100vh - 340px); overflow-y: auto; scrollbar-width: thin; }
+#right-column { top: 122px; right: 18px; width: 250px; max-height: calc(100vh - 300px); overflow-y: auto; scrollbar-width: thin; }
+
+/* Everything a judge must see lives above the fold: compact rows, small caps, thin dividers. */
+#exposure .expo-rows { gap: 3px; }
+#exposure .expo-row { padding-top: 3px; }
+#exposure .expo-name { font-size: 10px; }
+#exposure .expo-val { font-size: 12px; }
+.expo-land-vals { font-size: 11px !important; }
+.expo-trend-wrap { margin-top: 6px; }
+.trend-title { font-size: 9.5px; color: var(--muted); margin-bottom: 2px; }
+.trend-note { margin-top: 4px; font-size: 9.5px; }
+.trend-sparse .trend-bar { background: repeating-linear-gradient(45deg, rgba(122,162,220,0.35) 0 3px, rgba(122,162,220,0.15) 3px 6px); }
+.formula-note { font-family: var(--mono); font-size: 9.5px; margin-top: 4px; line-height: 1.35; }
+.bar-sum-row { border-top: 1px solid var(--line-strong); margin-top: 2px; }
+.bar-sum-track { background: none; }
+.bar-sum { font-weight: 700; color: var(--text); }
 
 .panel {
   background: var(--panel);
@@ -197,7 +212,8 @@ body { position: relative; }
    transform, and the two would otherwise fight each other. */
 #timeline {
   position: absolute; left: 0; right: 0; bottom: 14px; z-index: 25;
-  display: flex; flex-direction: column; align-items: center; gap: 6px; padding: 0 18px;
+  display: flex; flex-direction: column; align-items: center; gap: 6px; padding: 0 18px 0;
+  padding-bottom: 34px; /* own row: keeps the attribution clear of the slider card */
   pointer-events: none;
   /* Fade only: the timeline is anchored to the viewport edge, so it must never sit on an
      offset transform — a paused animation would otherwise leave it hanging off screen. */

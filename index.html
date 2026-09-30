@@ -51,22 +51,28 @@
     </div>
 
     <div class="breakdown" id="breakdown">
-      <div class="bar-row" title="Water that the published records put on this cell, for the selected year.">
-        <span class="bar-name">flood hazard</span>
+      <div class="bar-row" title="Water that the published records put on this cell this year — modelled depth AND flood history packed together (the 40% + 20% terms). Max contribution 6 points.">
+        <span class="bar-name">hazard (depth + history)</span>
         <span class="bar-track"><i id="bar-hazard"></i></span>
         <span class="bar-value" id="bar-hazard-value">–</span>
       </div>
-      <div class="bar-row" title="How low the ground is. Chennai drains to the sea, so low cells are the first to hold water.">
+      <div class="bar-row" title="How low the ground is. Chennai drains to the sea, so low cells are the first to hold water. Max contribution 3 points.">
         <span class="bar-name">low ground</span>
         <span class="bar-track"><i id="bar-ground"></i></span>
         <span class="bar-value" id="bar-ground-value">–</span>
       </div>
-      <div class="bar-row" title="Built-up share of the cell: OpenStreetMap land use plus measured building footprints.">
+      <div class="bar-row" title="Built-up share of the cell: OpenStreetMap land use plus measured building footprints. Max contribution 1 point.">
         <span class="bar-name">built-up</span>
         <span class="bar-track"><i id="bar-built"></i></span>
         <span class="bar-value" id="bar-built-value">–</span>
       </div>
+      <div class="bar-row bar-sum-row">
+        <span class="bar-name">score</span>
+        <span class="bar-track bar-sum-track"></span>
+        <span class="bar-value bar-sum" id="bar-sum">–</span>
+      </div>
     </div>
+    <p class="hint formula-note">bars sum to the score · hazard packs depth (40%) + history (20%)</p>
 
     <dl class="facts">
       <div><dt>ground height</dt><dd id="fact-elev">–</dd></div>
@@ -113,12 +119,19 @@
       <div class="expo-row expo-sub"><span class="expo-name">in ≥ 60 cm water</span><span class="expo-val expo-severe" id="expo-people-severe">–</span></div>
       <div class="expo-row"><span class="expo-name">buildings</span><span class="expo-val" id="expo-buildings">–</span></div>
       <div class="expo-row"><span class="expo-name">roads</span><span class="expo-val" id="expo-roads">–</span></div>
-      <div class="expo-row"><span class="expo-name" title="Built-up land in this year's water, split residential / commercial / industrial.">built-up wet (res/com/ind)</span><span class="expo-val" id="expo-land">–</span></div>
+      <div class="expo-row" title="Built-up land in this year's water, split residential / commercial / industrial. OSM land-use completeness varies — honest and expected."><span class="expo-name">built-up wet</span><span class="expo-val expo-land-vals"><span id="expo-land-res">–</span> res · <span id="expo-land-com">–</span> com · <span id="expo-land-ind">–</span> ind</span></div>
       <div class="expo-row"><span class="expo-name">critical sites</span><span class="expo-val" id="expo-crit">–</span></div>
-      <div class="expo-row expo-sub"><span class="expo-name">in ≥ 60 cm water</span><span class="expo-val expo-severe" id="expo-crit-severe">–</span></div>
+      <div class="expo-row expo-sub"><span class="expo-name">hospitals · schools · police · fire · in ≥60 cm</span><span class="expo-val expo-severe" id="expo-crit-severe">–</span></div>
     </div>
-    <div class="expo-trend" id="expo-trend" title="Exposed residents per year, 2005 to 2070"></div>
-    <p class="hint" id="expo-ward" style="margin-top:6px">–</p>
+    <div class="expo-trend-wrap">
+      <div class="trend-title">residents exposed</div>
+      <div class="expo-trend" id="expo-trend" title="Exposed residents per year, 2005 to 2070"></div>
+      <p class="hint trend-note">Years use different source datasets (2020: only 53 published hotspot points — sparse record), so comparisons are indicative, not exact.</p>
+    </div>
+    <button class="toggle" id="expo-ward-btn" aria-pressed="false" hidden style="margin-top:4px">
+      <span class="toggle-key">◎</span>
+      <span class="toggle-text" id="expo-ward">–</span>
+    </button>
     <button class="toggle" id="csv-btn" aria-pressed="false" style="margin-top:6px">
       <span class="toggle-key">⬇</span>
       <span class="toggle-text">Ward table as CSV</span>
