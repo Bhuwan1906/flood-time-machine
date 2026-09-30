@@ -1,0 +1,144 @@
+{
+  "region": "chennai",
+  "generated": "2026-09-28T11:08:48.790Z",
+  "years": [
+    {
+      "key": "2005",
+      "label": "2005 — GCC flood extent",
+      "source": "Greater Chennai Corporation, published via opencity.in",
+      "sourceUrl": "https://data.opencity.in/dataset/chennai-floods-2005-data",
+      "dataset": "chennai-floods-2005-data",
+      "license": "Other (Public Domain)",
+      "publishedFeatures": 235,
+      "featuresInApp": 235,
+      "droppedForCategory": 0,
+      "publishedAreaKm2": 238.7,
+      "bytes": 161963,
+      "file": "data/flood/2005.json",
+      "rainfall": {
+        "label": "Chennai floods, October–November 2005",
+        "window": {
+          "start": "2005-10-15",
+          "end": "2005-11-15"
+        },
+        "totalMm": 521.7,
+        "maxDailyMm": 99.2,
+        "maxDailyDate": "2005-10-27",
+        "source": "Open-Meteo historical archive (ERA5 reanalysis)",
+        "role": "rainfall during this event"
+      }
+    },
+    {
+      "key": "2015",
+      "label": "2015 — NRSC flood inundation zone",
+      "source": "National Remote Sensing Centre, published via opencity.in",
+      "sourceUrl": "https://data.opencity.in/dataset/chennai-floods-2015-data",
+      "dataset": "chennai-floods-2015-data",
+      "license": "Other (Public Domain)",
+      "publishedFeatures": 3733,
+      "featuresInApp": 3733,
+      "droppedForCategory": 0,
+      "publishedAreaKm2": 254.5,
+      "bytes": 1841317,
+      "file": "data/flood/2015.json",
+      "rainfall": {
+        "label": "Chennai floods, November–December 2015",
+        "window": {
+          "start": "2015-11-15",
+          "end": "2015-12-15"
+        },
+        "totalMm": 485.4,
+        "maxDailyMm": 115.7,
+        "maxDailyDate": "2015-11-16",
+        "source": "Open-Meteo historical archive (ERA5 reanalysis)",
+        "role": "rainfall during this event"
+      }
+    },
+    {
+      "key": "2020",
+      "label": "2020 — Cyclone Nivar hotspots",
+      "source": "Greater Chennai Corporation, published via opencity.in",
+      "sourceUrl": "https://data.opencity.in/dataset/chennai-floods-2020-data",
+      "dataset": "chennai-floods-2020-data",
+      "license": "Other (Public Domain)",
+      "publishedFeatures": 53,
+      "featuresInApp": 53,
+      "droppedForCategory": 0,
+      "publishedAreaKm2": 0,
+      "bytes": 5170,
+      "file": "data/flood/2020.json",
+      "rainfall": {
+        "label": "Cyclone Nivar, November 2020",
+        "window": {
+          "start": "2020-11-15",
+          "end": "2020-12-10"
+        },
+        "totalMm": 438.6,
+        "maxDailyMm": 97.3,
+        "maxDailyDate": "2020-11-25",
+        "source": "Open-Meteo historical archive (ERA5 reanalysis)",
+        "role": "rainfall during this event"
+      }
+    },
+    {
+      "key": "today",
+      "label": "Today — GCC flood hazard zoning (High + Moderate)",
+      "source": "Greater Chennai Corporation, published via opencity.in",
+      "sourceUrl": "https://data.opencity.in/dataset/chennai-flooding-data",
+      "dataset": "chennai-flooding-data",
+      "license": "Other (Public Domain)",
+      "publishedFeatures": 7360,
+      "featuresInApp": 2254,
+      "droppedForCategory": 5106,
+      "publishedAreaKm2": 71.3,
+      "bytes": 1801997,
+      "file": "data/flood/today.json",
+      "rainfall": {
+        "label": "Cyclone Michaung, December 2023",
+        "window": {
+          "start": "2023-12-01",
+          "end": "2023-12-12"
+        },
+        "totalMm": 379.2,
+        "maxDailyMm": 255.8,
+        "maxDailyDate": "2023-12-04",
+        "source": "Open-Meteo historical archive (ERA5 reanalysis)",
+        "role": "most recent comparable event"
+      }
+    },
+    {
+      "key": "2070",
+      "label": "2070 — 200-year return period corridors",
+      "source": "Greater Chennai Corporation flow mapping, published via opencity.in",
+      "sourceUrl": "https://data.opencity.in/dataset/chennai-flooding-data",
+      "dataset": "chennai-flooding-data",
+      "license": "Other (Public Domain)",
+      "publishedFeatures": 383,
+      "featuresInApp": 383,
+      "droppedForCategory": 0,
+      "publishedAreaKm2": 286.4,
+      "bytes": 2258211,
+      "file": "data/flood/2070.json",
+      "rainfall": {
+        "label": "Chennai floods, November–December 2015",
+        "window": {
+          "start": "2015-11-15",
+          "end": "2015-12-15"
+        },
+        "totalMm": 485.4,
+        "maxDailyMm": 115.7,
+        "maxDailyDate": "2015-11-16",
+        "source": "Open-Meteo historical archive (ERA5 reanalysis)",
+        "role": "design storm: 2015 rainfall replayed"
+      }
+    }
+  ],
+  "measured": {
+    "label": "Measured inundation depths",
+    "source": "GCC via opencity.in — depth published in inches",
+    "count": 192,
+    "maxInches": 60,
+    "note": "The published record carries no event date, so this is shown as evidence of depth, never as a timeline stop.",
+    "bytes": 28234
+  }
+}

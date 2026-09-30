@@ -1,0 +1,8 @@
+{
+  "provider": "AWS Open Data - Terrain Tiles (Terrarium)",
+  "encoding": "terrarium",
+  "zoomsFull": "11-14",
+  "zoomDetail": "15 (demo areas only)",
+  "tiles": 771,
+  "bytes": 37954584
+}

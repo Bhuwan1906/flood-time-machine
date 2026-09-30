@@ -1,0 +1,462 @@
+{
+  "region": "chennai",
+  "fetched": "2026-09-28T10:42:47.537Z",
+  "note": "Raw KMLs and converted GeoJSON live in .cache/flood (not committed). Selected layers are promoted to data/flood by pipeline/06.",
+  "catalog": [
+    {
+      "dataset": "chennai-floods-2005-data",
+      "slug": "chennai-gcc-flood-hostspots-2005",
+      "title": "Chennai GCC Flood Hostspots 2005",
+      "format": "KML",
+      "url": "https://data.opencity.in/dataset/bdae9914-f0e6-46e1-ad26-ed4ad4f5251a/resource/eeb91a74-eeab-4398-bc87-cc1423c83785/download/7cbcb0b1-7561-4e03-acab-b08ec68a838a.kml",
+      "license": "Other (Public Domain)",
+      "source": "https://data.opencity.in/dataset/chennai-floods-2005-data",
+      "features": 200,
+      "clippedOut": 0,
+      "bytes": 35601,
+      "geometryTypes": {
+        "Point": 200
+      },
+      "properties": [
+        "id",
+        "location",
+        "flood_depth",
+        "latitude",
+        "longitude"
+      ]
+    },
+    {
+      "dataset": "chennai-floods-2005-data",
+      "slug": "chennai-gcc-flood-extent-2005",
+      "title": "Chennai GCC Flood Extent 2005",
+      "format": "KML",
+      "url": "https://data.opencity.in/dataset/bdae9914-f0e6-46e1-ad26-ed4ad4f5251a/resource/5a5a41fd-d7f5-442a-a523-d58e3b6ef53a/download/c49407c8-1c03-4646-a3ba-0ddb16da0d9f.kml",
+      "license": "Other (Public Domain)",
+      "source": "https://data.opencity.in/dataset/chennai-floods-2005-data",
+      "features": 235,
+      "clippedOut": 0,
+      "bytes": 173163,
+      "geometryTypes": {
+        "Polygon": 233,
+        "MultiPolygon": 2
+      },
+      "properties": [
+        "name",
+        "id"
+      ]
+    },
+    {
+      "dataset": "chennai-floods-2015-data",
+      "slug": "gcc-stagnation-locations-in-2015",
+      "title": "GCC Stagnation Locations in 2015",
+      "format": "KML",
+      "url": "https://data.opencity.in/dataset/866141ab-3a3f-4dc0-8092-421d97ba29a2/resource/b5f39598-2e2d-40c5-82c3-806a1ad65c91/download/db3840ff-9f33-43a3-b826-2f9dae1bcb78.kml",
+      "license": "Other (Public Domain)",
+      "source": "https://data.opencity.in/dataset/chennai-floods-2015-data",
+      "features": 753,
+      "clippedOut": 0,
+      "bytes": 189837,
+      "geometryTypes": {
+        "Point": 753
+      },
+      "properties": [
+        "name",
+        "tessellate",
+        "extrude",
+        "visibility",
+        "OBJECTID",
+        "OID_",
+        "ZONE",
+        "DIVISION",
+        "LAT",
+        "LONG_"
+      ]
+    },
+    {
+      "dataset": "chennai-floods-2015-data",
+      "slug": "chennai-2015-crowd-sourced-flooding-locations",
+      "title": "Chennai 2015 Crowd-sourced Flooding Locations",
+      "format": "KML",
+      "url": "https://data.opencity.in/dataset/866141ab-3a3f-4dc0-8092-421d97ba29a2/resource/782a2e52-78ac-4f89-b469-28a6f7d365eb/download/46d6c279-ae09-43a8-8691-7a5386f69e3a.kml",
+      "license": "Other (Public Domain)",
+      "source": "https://data.opencity.in/dataset/chennai-floods-2015-data",
+      "features": 7850,
+      "clippedOut": 44,
+      "bytes": 2186080,
+      "geometryTypes": {
+        "LineString": 7813,
+        "MultiLineString": 37
+      },
+      "properties": [
+        "class",
+        "oneway",
+        "osm_id",
+        "type",
+        "is_flooded",
+        "length",
+        "l"
+      ]
+    },
+    {
+      "dataset": "chennai-floods-2015-data",
+      "slug": "chennai-2015-gcc-area-flood-hotspots",
+      "title": "Chennai 2015 GCC Area Flood Hotspots",
+      "format": "KML",
+      "url": "https://data.opencity.in/dataset/866141ab-3a3f-4dc0-8092-421d97ba29a2/resource/8e1c5b2d-322c-4dbd-bd64-6da2d1a8681d/download/31523c86-0ad1-42f5-b4d1-297daa4bbcd6.kml",
+      "license": "Other (Public Domain)",
+      "source": "https://data.opencity.in/dataset/chennai-floods-2015-data",
+      "features": 327,
+      "clippedOut": 0,
+      "bytes": 121785,
+      "geometryTypes": {
+        "Point": 327
+      },
+      "properties": [
+        "id",
+        "location",
+        "inundation_level",
+        "vulnerability",
+        "inundation_ft",
+        "vhvul_ab5f",
+        "hvul_3to5f",
+        "lvul_less2",
+        "zone",
+        "ward",
+        "sl__no_",
+        "latitude",
+        "longitude"
+      ]
+    },
+    {
+      "dataset": "chennai-floods-2015-data",
+      "slug": "chennai-2015-tiruvallur-district-flood-hotspots",
+      "title": "Chennai 2015 Tiruvallur District Flood Hotspots",
+      "format": "KML",
+      "url": "https://data.opencity.in/dataset/866141ab-3a3f-4dc0-8092-421d97ba29a2/resource/ec58c238-b760-474a-93f5-181abc8d45e9/download/d8d3ac1d-b486-4446-bc76-3dff0af8cbdb.kml",
+      "license": "Other (Public Domain)",
+      "source": "https://data.opencity.in/dataset/chennai-floods-2015-data",
+      "features": 149,
+      "clippedOut": 51,
+      "bytes": 45062,
+      "geometryTypes": {
+        "Point": 149
+      },
+      "properties": [
+        "name",
+        "id",
+        "sl",
+        "name_municipality",
+        "details",
+        "vulnerability",
+        "name_region",
+        "latitude",
+        "longitude"
+      ]
+    },
+    {
+      "dataset": "chennai-floods-2015-data",
+      "slug": "chennai-2015-vellore-district-flood-hotspots",
+      "title": "Chennai 2015 Vellore District Flood Hotspots",
+      "format": "KML",
+      "url": "https://data.opencity.in/dataset/866141ab-3a3f-4dc0-8092-421d97ba29a2/resource/28e9897f-d4e4-474c-910c-5f4a9e043d0f/download/8c37d609-9585-4a2a-ae3d-d8997b8d3ad4.kml",
+      "license": "Other (Public Domain)",
+      "source": "https://data.opencity.in/dataset/chennai-floods-2015-data",
+      "features": 0,
+      "clippedOut": 29,
+      "bytes": 42,
+      "geometryTypes": {},
+      "properties": []
+    },
+    {
+      "dataset": "chennai-floods-2015-data",
+      "slug": "chennai-2015-floods-inundation-zone",
+      "title": "Chennai 2015 Floods Inundation Zone ",
+      "format": "KML",
+      "url": "https://data.opencity.in/dataset/866141ab-3a3f-4dc0-8092-421d97ba29a2/resource/2056abd6-26d7-413b-9dfa-e63cbbf41ee7/download/7cb3cecf-a95a-4786-8032-9c7417655d24.kml",
+      "license": "Other (Public Domain)",
+      "source": "https://data.opencity.in/dataset/chennai-floods-2015-data",
+      "features": 3733,
+      "clippedOut": 268,
+      "bytes": 2317289,
+      "geometryTypes": {
+        "Polygon": 3733
+      },
+      "properties": [
+        "id",
+        "area",
+        "perimeter",
+        "pixelvalue"
+      ]
+    },
+    {
+      "dataset": "chennai-floods-2015-data",
+      "slug": "chennai-2015-kancheepuram-district-flood-hotspots",
+      "title": "Chennai 2015 Kancheepuram District Flood Hotspots",
+      "format": "KML",
+      "url": "https://data.opencity.in/dataset/866141ab-3a3f-4dc0-8092-421d97ba29a2/resource/e180e7f3-a2bc-4cd5-9883-008c94a24bed/download/3746a11e-620f-40e4-94a1-21ea8fe2a35e.kml",
+      "license": "Other (Public Domain)",
+      "source": "https://data.opencity.in/dataset/chennai-floods-2015-data",
+      "features": 101,
+      "clippedOut": 38,
+      "bytes": 40060,
+      "geometryTypes": {
+        "Point": 101
+      },
+      "properties": [
+        "id",
+        "sl_no_",
+        "taluka",
+        "vulnerability",
+        "details",
+        "inundation",
+        "source",
+        "longitude",
+        "latitude",
+        "name_region",
+        "escape_route",
+        "distance"
+      ]
+    },
+    {
+      "dataset": "chennai-flooding-data",
+      "slug": "chennai-inundation-points-with-depth-of-inundation",
+      "title": "Chennai Inundation Points with Depth of Inundation",
+      "format": "KML",
+      "url": "https://data.opencity.in/dataset/022dd080-e927-40d7-897d-adf3ee98ad69/resource/ceddf53f-03c0-4866-8ba8-5e84c8007a85/download/814ca028-4c84-4bd0-aa67-6dbaeb9b6ba5.kml",
+      "license": "Other (Public Domain)",
+      "source": "https://data.opencity.in/dataset/chennai-flooding-data",
+      "features": 192,
+      "clippedOut": 0,
+      "bytes": 46404,
+      "geometryTypes": {
+        "Point": 192
+      },
+      "properties": [
+        "OBJECTID_1",
+        "OBJECTID",
+        "F_ID",
+        "F_REMARKS",
+        "F_LATITUDE",
+        "F_LONGITUDE",
+        "DEPTH"
+      ]
+    },
+    {
+      "dataset": "chennai-flooding-data",
+      "slug": "chennai-flooding-points-in-2015",
+      "title": "Chennai Flooding Points in 2015",
+      "format": "KML",
+      "url": "https://data.opencity.in/dataset/022dd080-e927-40d7-897d-adf3ee98ad69/resource/80ed2fa7-1150-4f55-8125-682ab55282ac/download/93d2905a-a580-482d-96b0-4d9ccf5273ef.kml",
+      "license": "Other (Public Domain)",
+      "source": "https://data.opencity.in/dataset/chennai-flooding-data",
+      "features": 753,
+      "clippedOut": 0,
+      "bytes": 189837,
+      "geometryTypes": {
+        "Point": 753
+      },
+      "properties": [
+        "name",
+        "tessellate",
+        "extrude",
+        "visibility",
+        "OBJECTID",
+        "OID_",
+        "ZONE",
+        "DIVISION",
+        "LAT",
+        "LONG_"
+      ]
+    },
+    {
+      "dataset": "chennai-flooding-data",
+      "slug": "chennai-flows-5-year-return-period",
+      "title": "Chennai Flows 5 Year Return Period",
+      "format": "KML",
+      "url": "https://data.opencity.in/dataset/022dd080-e927-40d7-897d-adf3ee98ad69/resource/4d8579d9-9331-4c9b-95be-1489160376ee/download/ef3286de-1c9b-41a2-a5f2-a075863e26f6.kml",
+      "license": "Other (Public Domain)",
+      "source": "https://data.opencity.in/dataset/chennai-flooding-data",
+      "features": 579,
+      "clippedOut": 0,
+      "bytes": 4133401,
+      "geometryTypes": {
+        "Polygon": 547,
+        "MultiPolygon": 32
+      },
+      "properties": [
+        "OBJECTID_1",
+        "OBJECTID",
+        "CATEGORY",
+        "INDEX_",
+        "SOURCE",
+        "SHAPE.AREA",
+        "SHAPE.LEN"
+      ]
+    },
+    {
+      "dataset": "chennai-flooding-data",
+      "slug": "chennai-flows-10-years-return-period",
+      "title": "Chennai Flows 10 Years Return Period",
+      "format": "KML",
+      "url": "https://data.opencity.in/dataset/022dd080-e927-40d7-897d-adf3ee98ad69/resource/f9e93b56-88d8-4cd8-9a73-bcd86d6fd1bb/download/1bfef958-d4cc-4e50-a926-445e65bac7a8.kml",
+      "license": "Other (Public Domain)",
+      "source": "https://data.opencity.in/dataset/chennai-flooding-data",
+      "features": 678,
+      "clippedOut": 0,
+      "bytes": 4949489,
+      "geometryTypes": {
+        "Polygon": 650,
+        "MultiPolygon": 28
+      },
+      "properties": [
+        "OBJECTID_1",
+        "OBJECTID",
+        "CATEGORY",
+        "SHAPE.AREA",
+        "SHAPE.LEN"
+      ]
+    },
+    {
+      "dataset": "chennai-flooding-data",
+      "slug": "chennai-flows-25-year-return-period",
+      "title": "Chennai Flows 25 Year Return Period",
+      "format": "KML",
+      "url": "https://data.opencity.in/dataset/022dd080-e927-40d7-897d-adf3ee98ad69/resource/d6263b58-e053-4196-a98d-11755bc2edef/download/a6b4f2b1-f2b4-4dbc-93da-37be6dc7a345.kml",
+      "license": "Other (Public Domain)",
+      "source": "https://data.opencity.in/dataset/chennai-flooding-data",
+      "features": 549,
+      "clippedOut": 0,
+      "bytes": 5554731,
+      "geometryTypes": {
+        "Polygon": 530,
+        "MultiPolygon": 19
+      },
+      "properties": [
+        "OBJECTID_1",
+        "OBJECTID",
+        "CATEGORY",
+        "SHAPE.AREA",
+        "SHAPE.LEN"
+      ]
+    },
+    {
+      "dataset": "chennai-flooding-data",
+      "slug": "chennai-flows-50-years-return-period",
+      "title": "Chennai Flows 50 Years Return Period",
+      "format": "KML",
+      "url": "https://data.opencity.in/dataset/022dd080-e927-40d7-897d-adf3ee98ad69/resource/9467f93f-5073-4c83-b14b-7e16a56c848a/download/a6b20b7c-d771-4572-a2c7-9d8c125e6e5d.kml",
+      "license": "Other (Public Domain)",
+      "source": "https://data.opencity.in/dataset/chennai-flooding-data",
+      "features": 491,
+      "clippedOut": 0,
+      "bytes": 5777908,
+      "geometryTypes": {
+        "Polygon": 473,
+        "MultiPolygon": 18
+      },
+      "properties": [
+        "OBJECTID_1",
+        "OBJECTID",
+        "CATEGORY",
+        "SHAPE.AREA",
+        "SHAPE.LEN"
+      ]
+    },
+    {
+      "dataset": "chennai-flooding-data",
+      "slug": "chennai-flows-100-years-return-period",
+      "title": "Chennai Flows 100 Years Return Period",
+      "format": "KML",
+      "url": "https://data.opencity.in/dataset/022dd080-e927-40d7-897d-adf3ee98ad69/resource/e34a8f9d-251c-401d-8642-bd231625a081/download/994a99a1-6104-40c7-ac10-2b7a7ab74437.kml",
+      "license": "Other (Public Domain)",
+      "source": "https://data.opencity.in/dataset/chennai-flooding-data",
+      "features": 422,
+      "clippedOut": 0,
+      "bytes": 5298978,
+      "geometryTypes": {
+        "Polygon": 399,
+        "MultiPolygon": 23
+      },
+      "properties": [
+        "OBJECTID_1",
+        "OBJECTID",
+        "CATEGORY",
+        "SHAPE.AREA",
+        "SHAPE.LEN"
+      ]
+    },
+    {
+      "dataset": "chennai-flooding-data",
+      "slug": "chennai-flows-200-years-return-period",
+      "title": "Chennai Flows 200 Years Return Period",
+      "format": "KML",
+      "url": "https://data.opencity.in/dataset/022dd080-e927-40d7-897d-adf3ee98ad69/resource/bf1c254d-a308-4bdb-a920-0c05236d168e/download/61f1f06f-1fa1-4ef0-94c7-224d892efbef.kml",
+      "license": "Other (Public Domain)",
+      "source": "https://data.opencity.in/dataset/chennai-flooding-data",
+      "features": 383,
+      "clippedOut": 0,
+      "bytes": 6046456,
+      "geometryTypes": {
+        "Polygon": 361,
+        "MultiPolygon": 22
+      },
+      "properties": [
+        "OBJECTID_1",
+        "OBJECTID",
+        "CATEGORY",
+        "INDEX_",
+        "SOURCE",
+        "SHAPE.AREA",
+        "SHAPE.LEN"
+      ]
+    },
+    {
+      "dataset": "chennai-flooding-data",
+      "slug": "chennai-flood-hazard-zones-map",
+      "title": "Chennai Flood Hazard Zones Map",
+      "format": "KML",
+      "url": "https://data.opencity.in/dataset/022dd080-e927-40d7-897d-adf3ee98ad69/resource/e61afe07-0f52-4be9-bdf3-5eb0f62b2ed6/download/7f29da20-6621-4b49-b0cf-28b9d1de232b.kml",
+      "license": "Other (Public Domain)",
+      "source": "https://data.opencity.in/dataset/chennai-flooding-data",
+      "features": 7360,
+      "clippedOut": 0,
+      "bytes": 25051093,
+      "geometryTypes": {
+        "Polygon": 4828,
+        "MultiPolygon": 2532
+      },
+      "properties": [
+        "OBJECTID_12",
+        "OBJECTID_1",
+        "OBJECTID",
+        "OVERLAY_UN",
+        "OVERLAY__1",
+        "CATEGORY",
+        "SHAPE.AREA",
+        "SHAPE.LEN"
+      ]
+    },
+    {
+      "dataset": "chennai-floods-2020-data",
+      "slug": "chennai-gcc-flood-hostspots-2020",
+      "title": "Chennai GCC Flood Hostspots 2020",
+      "format": "KML",
+      "url": "https://data.opencity.in/dataset/3aef2eef-a97e-4fac-a4a9-aaa42a91fbfa/resource/068cfdae-652d-47c9-9722-7c49396d8a05/download/3a141c21-2b9d-4fc0-bd96-d71650a8a15a.kml",
+      "license": "Other (Public Domain)",
+      "source": "https://data.opencity.in/dataset/chennai-floods-2020-data",
+      "features": 53,
+      "clippedOut": 0,
+      "bytes": 9836,
+      "geometryTypes": {
+        "Point": 53
+      },
+      "properties": [
+        "name",
+        "id",
+        "slno",
+        "latitude",
+        "longitude"
+      ]
+    }
+  ]
+}

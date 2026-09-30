@@ -1,0 +1,65 @@
+{
+  "note": "Curated from data/regions.json and cross-checked against the score grid (data/score/demo-snapshot.json).",
+  "areas": [
+    {
+      "id": "velachery",
+      "label": "Velachery",
+      "subtitle": "Sadasiva Nagar — inside the 2005 extent and the 2015 satellite footprint",
+      "whyShort": "Appears in two of the three historical records and is still inside the 2070 corridor.",
+      "preset": [
+        80.20432,
+        12.96218
+      ],
+      "bbox": [
+        12.955,
+        80.185,
+        13.01,
+        80.245
+      ],
+      "center": [
+        80.215,
+        12.9825
+      ]
+    },
+    {
+      "id": "taramani",
+      "label": "Taramani",
+      "subtitle": "beside the Pallikaranai marsh",
+      "whyShort": "The wetland story: this street sits where the marsh used to absorb the water.",
+      "preset": [
+        80.23911,
+        12.99162
+      ],
+      "bbox": [
+        12.975,
+        80.22,
+        13.01,
+        80.255
+      ],
+      "center": [
+        80.2375,
+        12.9925
+      ]
+    },
+    {
+      "id": "srm",
+      "label": "SRM Kattankulathur",
+      "subtitle": "our own campus",
+      "whyShort": "High ground at 35 m — the control case. It appears in the 2015 footprint but not in the 2070 corridor.",
+      "preset": [
+        80.07065,
+        12.82921
+      ],
+      "bbox": [
+        12.795,
+        80.015,
+        12.85,
+        80.075
+      ],
+      "center": [
+        80.045,
+        12.8225
+      ]
+    }
+  ]
+}

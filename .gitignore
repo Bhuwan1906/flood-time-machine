@@ -1,0 +1,11 @@
+# installed packages (only the pipeline needs them; the app itself ships vendored libraries in data/vendor)
+node_modules/
+package-lock.json
+
+# raw downloads — kMLs and the intermediate GeoJSON that the pipeline re-downloads from source
+.cache/
+
+# local scratch
+*.log
+.DS_Store
+Thumbs.db

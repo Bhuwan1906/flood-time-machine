@@ -1,0 +1,7 @@
+*.bat text eol=crlf
+*.md text
+*.mjs text
+*.js text
+*.json text
+*.css text
+*.html text

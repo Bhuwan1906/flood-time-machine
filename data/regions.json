@@ -1,0 +1,71 @@
+{
+  "$comment": "Region config. This single file is what makes the pipeline city-agnostic: adding a city means adding an entry here and re-running the pipeline. Flood Time Machine v1 ships Chennai.",
+  "defaultRegion": "chennai",
+  "regions": {
+    "chennai": {
+      "id": "chennai",
+      "name": "Chennai",
+      "nameLocal": "சென்னை",
+      "state": "Tamil Nadu",
+      "country": "India",
+      "bbox": [12.8, 79.98, 13.32, 80.36],
+      "center": [80.2707, 13.0827],
+      "initialView": { "center": [80.245, 13.02], "zoom": 12.1 },
+      "basemap": {
+        "provider": "Protomaps basemap (OpenStreetMap data, ODbL)",
+        "buildUrl": "https://build.protomaps.com/20260927.pmtiles",
+        "buildDate": "2026-09-27",
+        "tileZoomMax": 15,
+        "tilesPath": "data/tiles/{z}/{x}/{y}.mvt"
+      },
+      "terrain": {
+        "provider": "AWS Open Data - Terrain Tiles (Terrarium)",
+        "urlTemplate": "https://s3.amazonaws.com/elevation-tiles-prod/terrarium/{z}/{x}/{y}.png",
+        "minZoom": 11,
+        "maxZoom": 15,
+        "sampleZoom": 14,
+        "encoding": "terrarium",
+        "verticalExaggeration": 3.0
+      },
+      "score": {
+        "gridZoom": 14,
+        "cellsPerTile": 24,
+        "weights": { "hazard": 0.6, "vulnerability": 0.3, "exposure": 0.1 },
+        "hazardSplit": { "depth": 0.4, "history": 0.2 },
+        "vulnerabilityBasis": "low elevation relative to the surrounding neighbourhood",
+        "exposureBasis": "OpenStreetMap building density per cell"
+      },
+      "years": [2015, 2023, 2025, 2070],
+      "overpass": {
+        "endpoint": "https://overpass-api.de/api/interpreter",
+        "userAgent": "FloodTimeMachine/1.0 (GEO IMPATHON 1.0 hackathon, Chennai; contact: team lead)"
+      },
+      "demoAreas": [
+        {
+          "id": "velachery",
+          "label": "Velachery",
+          "subtitle": "Sadasiva Nagar — inside the 2005 extent and the 2015 satellite footprint",
+          "preset": [80.20432, 12.96218],
+          "whyShort": "Appears in two of the three historical records and is still inside the 2070 corridor.",
+          "bbox": [12.955, 80.185, 13.01, 80.245]
+        },
+        {
+          "id": "taramani",
+          "label": "Taramani",
+          "subtitle": "beside the Pallikaranai marsh",
+          "preset": [80.23911, 12.99162],
+          "whyShort": "The wetland story: this street sits where the marsh used to absorb the water.",
+          "bbox": [12.975, 80.22, 13.01, 80.255]
+        },
+        {
+          "id": "srm",
+          "label": "SRM Kattankulathur",
+          "subtitle": "our own campus",
+          "preset": [80.07065, 12.82921],
+          "whyShort": "High ground at 35 m — the control case. It appears in the 2015 footprint but not in the 2070 corridor.",
+          "bbox": [12.795, 80.015, 12.85, 80.075]
+        }
+      ]
+    }
+  }
+}

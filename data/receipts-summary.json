@@ -1,0 +1,82 @@
+{
+  "normals": {
+    "station": {
+      "lon": 80.2707,
+      "lat": 13.0827,
+      "elevationM": 12,
+      "timezone": "Asia/Kolkata"
+    },
+    "period": {
+      "start": "1991-01-01",
+      "end": "2020-12-31",
+      "years": 30
+    },
+    "dailyMeanMm": 2.69,
+    "p95": 13.7,
+    "p99": 35.9,
+    "p999": 101.1,
+    "annualMaxMedian": 81.1,
+    "heavyDaysPerYear": 1.03,
+    "veryHeavyDaysPerYear": 0.27,
+    "extremelyHeavyDaysPerYear": 0.033,
+    "thresholds": {
+      "heavy": 64.5,
+      "veryHeavy": 115.6,
+      "extremelyHeavy": 204.5,
+      "note": "IMD daily rainfall categories"
+    },
+    "source": "Open-Meteo historical archive (ERA5), 1991-2020"
+  },
+  "citations": {
+    "2015 footprint": "NRSC flood inundation zone, via opencity.in (public domain)",
+    "2005 footprint": "GCC flood extent 2005, via opencity.in (public domain)",
+    "2020 hotspots": "GCC hotspots from Cyclone Nivar 2020, via opencity.in (public domain)",
+    "2070 projection": "GCC flood flow corridors, 200-year return period, via opencity.in (public domain)",
+    "ground elevation": "AWS Open Data Terrain Tiles (Terrarium)",
+    "buildings and roads": "OpenStreetMap contributors (ODbL), tiles by Protomaps",
+    "wards": "datameet Municipal Spatial Data (CC-BY)",
+    "rainfall": "Open-Meteo historical archive (ERA5 reanalysis)"
+  },
+  "events": {
+    "2005": {
+      "label": "Chennai floods, October–November 2005",
+      "window": {
+        "start": "2005-10-15",
+        "end": "2005-11-15"
+      },
+      "totalMm": 521.7,
+      "maxDailyMm": 99.2,
+      "maxDailyDate": "2005-10-27"
+    },
+    "2015": {
+      "label": "Chennai floods, November–December 2015",
+      "window": {
+        "start": "2015-11-15",
+        "end": "2015-12-15"
+      },
+      "totalMm": 485.4,
+      "maxDailyMm": 115.7,
+      "maxDailyDate": "2015-11-16"
+    },
+    "2020": {
+      "label": "Cyclone Nivar, November 2020",
+      "window": {
+        "start": "2020-11-15",
+        "end": "2020-12-10"
+      },
+      "totalMm": 438.6,
+      "maxDailyMm": 97.3,
+      "maxDailyDate": "2020-11-25"
+    },
+    "2023": {
+      "label": "Cyclone Michaung, December 2023",
+      "window": {
+        "start": "2023-12-01",
+        "end": "2023-12-12"
+      },
+      "totalMm": 379.2,
+      "maxDailyMm": 255.8,
+      "maxDailyDate": "2023-12-04"
+    }
+  }
+}

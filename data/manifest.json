@@ -1,0 +1,134 @@
+{
+  "built": "2026-09-28T11:08:50.767Z",
+  "region": "chennai",
+  "regionName": "Chennai",
+  "years": [
+    "2005",
+    "2015",
+    "2020",
+    "today",
+    "2070"
+  ],
+  "grid": {
+    "zoom": 14,
+    "cellMetres": 99.3,
+    "cells": 207291,
+    "tiles": 475
+  },
+  "sizes": {
+    "basemapTiles": 32966662,
+    "terrain": 37954584,
+    "scoreGrid": 14287222,
+    "floodLayers": 6101803,
+    "fonts": 1850091,
+    "sprites": 103743
+  },
+  "payloadBytes": 93264105,
+  "offline": {
+    "required": [
+      {
+        "path": "index.html",
+        "bytes": 6175
+      },
+      {
+        "path": "app.js",
+        "bytes": 16896
+      },
+      {
+        "path": "map.js",
+        "bytes": 16571
+      },
+      {
+        "path": "score.js",
+        "bytes": 5716
+      },
+      {
+        "path": "three-d.js",
+        "bytes": 2589
+      },
+      {
+        "path": "style.css",
+        "bytes": 13324
+      },
+      {
+        "path": "data/regions.json",
+        "bytes": 2863
+      },
+      {
+        "path": "data/basemap-light.json",
+        "bytes": 268176
+      },
+      {
+        "path": "data/basemap-dark.json",
+        "bytes": 268153
+      },
+      {
+        "path": "data/vendor/maplibre-gl.js",
+        "bytes": 1056837
+      },
+      {
+        "path": "data/vendor/maplibre-gl.css",
+        "bytes": 70024
+      },
+      {
+        "path": "data/score/index.json",
+        "bytes": 2130
+      },
+      {
+        "path": "data/places.json",
+        "bytes": 70374
+      },
+      {
+        "path": "data/wetlands.geojson",
+        "bytes": 160310
+      },
+      {
+        "path": "data/flood/index.json",
+        "bytes": 4911
+      },
+      {
+        "path": "data/flood/measured.json",
+        "bytes": 28234
+      },
+      {
+        "path": "data/receipts-summary.json",
+        "bytes": 2334
+      },
+      {
+        "path": "data/demo-areas.json",
+        "bytes": 1472
+      },
+      {
+        "path": "data/flood/2005.json",
+        "bytes": 161963
+      },
+      {
+        "path": "data/flood/2015.json",
+        "bytes": 1841317
+      },
+      {
+        "path": "data/flood/2020.json",
+        "bytes": 5170
+      },
+      {
+        "path": "data/flood/today.json",
+        "bytes": 1801997
+      },
+      {
+        "path": "data/flood/2070.json",
+        "bytes": 2258211
+      }
+    ],
+    "wholeDataFolderBytes": 95764671
+  },
+  "attribution": {
+    "2015 footprint": "NRSC flood inundation zone, via opencity.in (public domain)",
+    "2005 footprint": "GCC flood extent 2005, via opencity.in (public domain)",
+    "2020 hotspots": "GCC hotspots from Cyclone Nivar 2020, via opencity.in (public domain)",
+    "2070 projection": "GCC flood flow corridors, 200-year return period, via opencity.in (public domain)",
+    "ground elevation": "AWS Open Data Terrain Tiles (Terrarium)",
+    "buildings and roads": "OpenStreetMap contributors (ODbL), tiles by Protomaps",
+    "wards": "datameet Municipal Spatial Data (CC-BY)",
+    "rainfall": "Open-Meteo historical archive (ERA5 reanalysis)"
+  }
+}

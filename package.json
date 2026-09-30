@@ -1,0 +1,26 @@
+{
+  "name": "flood-time-machine",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Per-address flood risk for Chennai, 2005 to 2070. GEO IMPATHON 1.0 (Disaster Risk Analysis).",
+  "license": "MIT",
+  "type": "module",
+  "scripts": {
+    "start": "node server.mjs",
+    "fetch:basemap": "node pipeline/01-fetch-basemap.mjs",
+    "fetch:terrain": "node pipeline/02-fetch-terrain.mjs",
+    "fetch:flood": "node pipeline/03-fetch-flood.mjs",
+    "fetch:places": "node pipeline/04-fetch-places.mjs",
+    "fetch:rainfall": "node pipeline/05-fetch-rainfall.mjs",
+    "build:score": "node pipeline/06-score-grid.mjs",
+    "build:all": "node pipeline/07-bundle.mjs",
+    "verify": "node pipeline/08-verify.mjs"
+  },
+  "comment": "These four are needed by the data pipeline only. The app itself has no dependencies at runtime: MapLibre and PMTiles are vendored into data/vendor/.",
+  "dependencies": {
+    "@mapbox/vector-tile": "^3.0.0",
+    "@protomaps/basemaps": "^5.7.2",
+    "pbf": "^3.3.0",
+    "pmtiles": "^4.3.0"
+  }
+}

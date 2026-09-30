@@ -1,0 +1,140 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Flood Time Machine — Chennai flood risk by address, 2005 to 2070</title>
+<meta name="description" content="Type any Chennai address and watch its flood risk change from 2005 to 2070, built on published satellite, municipal and terrain data.">
+<link rel="stylesheet" href="data/vendor/maplibre-gl.css">
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+<div id="loading" aria-hidden="true"><div id="loading-bar"></div></div>
+<div id="map"></div>
+
+<header id="brand">
+  <div class="brand-mark">Flood&nbsp;Time&nbsp;Machine</div>
+  <div class="brand-sub"><span id="region-name">Chennai</span> · per-address flood risk · <span id="brand-years">2005 → 2070</span></div>
+  <div class="brand-chips">
+    <span class="chip chip-live" id="offline-chip" title="Every map tile, terrain tile, risk score and flood record is stored locally. Nothing is fetched from the internet while you use it.">offline · no internet needed</span>
+  </div>
+</header>
+
+<aside id="left-column">
+  <section class="panel" id="search-panel">
+    <label class="panel-label" for="address">Your address</label>
+    <div class="search-row">
+      <input id="address" type="search" autocomplete="off" spellcheck="false" placeholder="Type an area, or tap the map">
+      <button id="clear-address" class="icon-button" title="Clear" aria-label="Clear">×</button>
+    </div>
+    <ul id="search-results" hidden></ul>
+    <div id="presets" class="presets"></div>
+    <p class="hint" id="place-line">Tap anywhere on the map to drop the pin on your own street.</p>
+  </section>
+
+  <section class="panel" id="score-panel">
+    <div class="score-head">
+      <div class="panel-label">Flood risk score<span class="year-tag" id="score-year">Today</span></div>
+      <div class="score-dial-wrap">
+        <svg id="dial" viewBox="0 0 140 140" role="img" aria-labelledby="score-aria">
+          <circle class="dial-track" cx="70" cy="70" r="58"></circle>
+          <circle class="dial-value" id="dial-value" cx="70" cy="70" r="58"></circle>
+          <circle class="dial-dot" id="dial-dot" cx="70" cy="12" r="5"></circle>
+        </svg>
+        <div class="score-readout">
+          <div class="score-number" id="score-number">–</div>
+          <div class="score-label" id="score-label">pick an address</div>
+          <div class="score-delta" id="score-delta"></div>
+        </div>
+      </div>
+      <p id="score-aria" class="sr-only">Risk score out of ten</p>
+    </div>
+
+    <div class="breakdown" id="breakdown">
+      <div class="bar-row" title="Water that the published records put on this cell, for the selected year.">
+        <span class="bar-name">flood hazard</span>
+        <span class="bar-track"><i id="bar-hazard"></i></span>
+        <span class="bar-value" id="bar-hazard-value">–</span>
+      </div>
+      <div class="bar-row" title="How low the ground is. Chennai drains to the sea, so low cells are the first to hold water.">
+        <span class="bar-name">low ground</span>
+        <span class="bar-track"><i id="bar-ground"></i></span>
+        <span class="bar-value" id="bar-ground-value">–</span>
+      </div>
+      <div class="bar-row" title="Built-up share of the cell: OpenStreetMap land use plus measured building footprints.">
+        <span class="bar-name">built-up</span>
+        <span class="bar-track"><i id="bar-built"></i></span>
+        <span class="bar-value" id="bar-built-value">–</span>
+      </div>
+    </div>
+
+    <dl class="facts">
+      <div><dt>ground height</dt><dd id="fact-elev">–</dd></div>
+      <div><dt>water depth</dt><dd id="fact-depth">–</dd></div>
+      <div><dt>floods when</dt><dd id="fact-rain">–</dd></div>
+    </dl>
+    <p class="hint" id="wetland-note" hidden></p>
+  </section>
+</aside>
+
+<aside id="right-column">
+  <section class="panel panel-compact" id="controls">
+    <button class="toggle" id="toggle-3d" aria-pressed="false">
+      <span class="toggle-key">3D</span>
+      <span class="toggle-text">Terrain &amp; rising water</span>
+    </button>
+    <button class="toggle" id="toggle-wetlands" aria-pressed="false">
+      <span class="toggle-key">◈</span>
+      <span class="toggle-text">Restore wetlands</span>
+    </button>
+    <button class="toggle" id="toggle-grid" aria-pressed="true">
+      <span class="toggle-key">▦</span>
+      <span class="toggle-text">Risk grid</span>
+    </button>
+    <button class="toggle" id="toggle-theme" aria-pressed="false">
+      <span class="toggle-key">◐</span>
+      <span class="toggle-text">Light basemap</span>
+    </button>
+  </section>
+
+  <section class="panel panel-compact" id="legend">
+    <div class="panel-label">Risk score</div>
+    <div class="ramp"></div>
+    <div class="ramp-labels"><span>0</span><span>5</span><span>10</span></div>
+    <p class="hint" id="mode-note">Each square is a 100 m cell. Colours are pre-computed risk, so the whole city is already scored before you click.</p>
+  </section>
+</aside>
+
+<footer id="timeline">
+  <div class="timeline-inner">
+    <button id="play" class="play" title="Play the years" aria-label="Play through the years">
+      <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M8 5v14l11-7z"></path></svg>
+    </button>
+    <div class="timeline-main">
+      <div class="timeline-head">
+        <div>
+          <div class="timeline-year" id="timeline-year">Today</div>
+          <div class="timeline-source" id="timeline-source">–</div>
+        </div>
+        <div class="timeline-receipt" id="timeline-receipt">–</div>
+      </div>
+      <div class="slider-wrap">
+        <input id="year-slider" type="range" min="0" max="4" step="1" value="3" aria-label="Year">
+        <div class="ticks" id="ticks"></div>
+      </div>
+    </div>
+  </div>
+  <!-- Credits live with the data they describe, so they can never be hidden behind another panel. -->
+  <div id="attribution" class="attribution">
+    <span id="attribution-text"></span>
+  </div>
+</footer>
+
+<div id="recenter" class="recenter" hidden>
+  <button id="recenter-button">Return to my address</button>
+</div>
+
+<script src="data/vendor/maplibre-gl.js"></script>
+<script type="module" src="app.js"></script>
+</body>
+</html>

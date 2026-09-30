@@ -1,0 +1,12 @@
+{
+  "source": "https://github.com/datameet/Municipal_Spatial_Data (CC-BY)",
+  "count": 201,
+  "attributeKeys": [
+    "Zone_No",
+    "Ward_No",
+    "Zone_Name",
+    "AREA",
+    "PERIMETER"
+  ],
+  "sample": []
+}
