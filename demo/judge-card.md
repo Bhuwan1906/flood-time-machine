@@ -42,6 +42,8 @@ No ML anywhere. Every cell's score is explainable in 30 seconds. Weights live in
 
 **CRITICAL SITES (the line that lands):** **Today: 1,111 hospitals, clinics, schools, colleges, police stations, fire stations and shelters sit inside the city's own hazard zones — 586 of them in ≥60 cm water.** 2015: 590 · 2070: 932. Say it as: "over a thousand critical facilities are where the water goes."
 
+**LAND USE + WARDS (the deliverable):** built-up land in today's water — **12.4 km² residential · 5.7 commercial · 22.0 industrial.** Worst ward today: **#86 Ambattur, ~25,600 people.** The app downloads the full ranked 201-ward table as CSV — statistics in usable form, no login, works offline.
+
 ---
 
 ## TOP 10 JUDGE ANSWERS (one breath each)

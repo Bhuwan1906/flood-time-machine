@@ -102,6 +102,13 @@ universities, kindergartens, police stations, fire stations, relief shelters and
 each year's water, alongside the severe (≥ 60 cm) tier: today that is **1,111 critical sites in
 the city's own hazard zones, 586 of them in waist-deep water or deeper.**
 
+The brief's land-use input appears in the output too: built-up land in each year's water is split
+**residential / commercial / industrial** (today: 12.4 / 5.7 / 22.0 km²), and the exposure is
+joined to the 201 ward polygons (`pipeline/12-wards.mjs`) for a ranked ward table — worst ward
+today is #86 Ambattur at ~25,600 exposed residents — downloadable as **CSV** straight from the
+panel. That file is the deliverable form of "affected infrastructure statistics": a ward officer
+or an insurer can open it in a spreadsheet, offline, today.
+
 ## The data
 
 | Layer | Source | What ships |

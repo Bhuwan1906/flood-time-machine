@@ -148,6 +148,8 @@ function wire() {
 
   $('year-slider').addEventListener('input', (event) => selectYear(Number(event.target.value)));
   $('play').addEventListener('click', () => togglePlay());
+  const csvBtn = $('csv-btn');
+  if (csvBtn) csvBtn.addEventListener('click', downloadWardCsv);
 
   const search = $('address');
   search.addEventListener('input', () => renderResults(search.value));
@@ -302,6 +304,7 @@ function hideResults() {
 // ---------------------------------------------------------------- year + score
 let exposureByYear = {};
 let exposureOrder = [];
+let wardData = null;
 
 function lakhNum(n) {
   if (n >= 10000000) return `${(n / 10000000).toFixed(1)} Cr`;
@@ -317,6 +320,11 @@ async function loadExposure() {
   } catch {
     exposureByYear = {};
   }
+  try {
+    wardData = await (await fetch('data/exposure-wards.json')).json();
+  } catch {
+    wardData = null;
+  }
 }
 
 function updateExposurePanel() {
@@ -329,7 +337,34 @@ function updateExposurePanel() {
   $('expo-roads').textContent = y ? `${y.roadKm.toLocaleString('en-IN')} km` : '–';
   $('expo-crit').textContent = y ? y.crit.toLocaleString('en-IN') : '–';
   $('expo-crit-severe').textContent = y && y.critSevere ? y.critSevere.toLocaleString('en-IN') : '—';
+  if (wardData) {
+    const lu = wardData.landUse.perYearWetKm2[year.key];
+    if (lu) $('expo-land').textContent = `${lu.residential} / ${lu.commercial} / ${lu.industrial} km²`;
+    const wKey = `${year.key}_people`;
+    const worst = wardData.wards[0] && wardData.wards.reduce((a, b) => (b[wKey] > a[wKey] ? b : a), wardData.wards[0]);
+    $('expo-ward').textContent = worst && worst[wKey] > 0
+      ? `worst ward: #${worst.ward} ${worst.zone.toLowerCase()} — ${worst[wKey].toLocaleString('en-IN')} people`
+      : 'no ward population in this year\'s water';
+  }
   renderExposureTrend();
+}
+
+function downloadWardCsv() {
+  if (!wardData || !wardData.wards.length) return;
+  const years = ['2005', '2015', '2020', 'today', '2070'];
+  const head = ['ward', 'zone'];
+  for (const y of years) head.push(`${y}_people`, `${y}_people_severe`, `${y}_buildings`, `${y}_road_km`, `${y}_critical_sites`);
+  const rows = wardData.wards.map((w) => {
+    const r = [w.ward, w.zone];
+    for (const y of years) r.push(w[`${y}_people`], w[`${y}_people_severe`], w[`${y}_buildings`], w[`${y}_road_km`], w[`${y}_crit`]);
+    return r.join(',');
+  });
+  const csv = '\ufeff' + head.join(',') + '\n' + rows.join('\n');
+  const a = document.createElement('a');
+  a.href = URL.createObjectURL(new Blob([csv], { type: 'text/csv' }));
+  a.download = 'chennai-flood-exposure-by-ward.csv';
+  a.click();
+  URL.revokeObjectURL(a.href);
 }
 
 function renderExposureTrend() {
