@@ -77,6 +77,23 @@ score = 10 × ( 0.40 × modelled depth         // how deep the published records
 Each cell also stores the two hazard terms separately, which is what lets the browser recompute a
 score instantly when you flip the wetlands toggle — the counterfactual never needed a server.
 
+### Exposure statistics (challenge 4.4)
+
+The brief for Disaster Risk Analysis asks what a hazard means for settlements, roads and
+infrastructure. Each cell therefore also carries three baked fields: an estimated resident
+population, a building count and the metres of mapped road inside it. `pipeline/11-exposure.mjs`
+turns those into `data/exposure.json` — for every year on the slider, how many people, buildings
+and kilometres of road sit in modelled water (≥ 15 cm = affected, ≥ 60 cm = severe/waist-deep).
+The panel on the right of the app re-counts as you drag the years; the score panel shows the
+residents on the selected street.
+
+Population is a **model, and it says so**: India publishes no street-level population raster, so
+residents are estimated from measured OpenStreetMap building footprints at a Census-anchored
+occupancy — one household per ~85 m² of footprint, 3.51 persons per household (Census 2011 Tamil
+Nadu average). It reads as population present on an average day, not an exact count. Citywide it
+lands at ≈ 33 lakh people and ≈ 3.8 lakh buildings across the scored cells, which sanity-checks
+against Chennai's population.
+
 ## The data
 
 | Layer | Source | What ships |
@@ -107,6 +124,9 @@ These are choices, not gaps:
 - **No invented building heights.** OpenStreetMap publishes a height for a tiny minority of Chennai's
   buildings (we measured ~1% in a sample). The 3D view uses the published height where it exists and a
   flat massing everywhere else, labelled as such. A pretty skyline would have been a lie.
+- **No pretend census.** Per-cell population is a footprint-times-occupancy estimate (Census-anchored,
+  labelled in the app). It is built for comparison across years and streets, not for counting heads
+  at one door.
 - **No fake events.** The published measured-depth layer carries no event date, so it is shown as
   evidence of depth, never as a timeline stop. The five stops are all dated, sourced records.
 - **No inflated coverage.** GCC published only 53 hotspot points for Cyclone Nivar, so 2020 looks
@@ -164,6 +184,8 @@ npm run fetch:places       # 04 Wards, wetlands, offline place-name search index
 npm run fetch:rainfall     # 05 Event rainfall + 1991-2020 normals from Open-Meteo
 npm run build:score        # 06 THE BRAIN: bake the per-cell, per-year score grid
 npm run build:all          # 07 Promote the year layers, write receipts, manifest, integrity check
+node pipeline/10-population.mjs   # 10 Residents, buildings, road metres per cell (challenge 4.4)
+node pipeline/11-exposure.mjs     # 11 Per-year citywide exposure statistics -> data/exposure.json
 npm run verify             # 08 Pre-demo check: is every lookup going to succeed?
 ```
 

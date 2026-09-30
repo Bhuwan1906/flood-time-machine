@@ -56,6 +56,7 @@ for (const file of DATA_FILES) {
 
 const scoreIndex = exists('data/score/index.json') ? readJson('data/score/index.json') : null;
 const floodIndex = exists('data/flood/index.json') ? readJson('data/flood/index.json') : null;
+const exposure = exists('data/exposure.json') ? readJson('data/exposure.json') : null;
 
 // ---------------------------------------------------------------- 3. every layer for every year
 for (const year of floodIndex?.years || []) {
@@ -76,6 +77,24 @@ if (scoreFiles < 400) problems.push(`score tiles look incomplete: ${scoreFiles}`
 else ok.push(`${scoreFiles} score tiles`);
 if (fonts < 10) warnings.push(`only ${fonts} font range files — some labels will fall back to a system font`);
 else ok.push(`${fonts} font range files`);
+
+// ---------------------------------------------------------------- 4b. exposure layer (challenge 4.4)
+if (!exposure) {
+  problems.push('missing data/exposure.json — run pipeline/11-exposure.mjs');
+} else if (!scoreIndex || (scoreIndex.fieldCount ?? 0) < 24) {
+  problems.push('score tiles lack POP/BLDC/ROADD fields — run pipeline/10-population.mjs');
+} else {
+  const byKey = Object.fromEntries(exposure.years.map((y) => [y.key, y]));
+  for (const year of scoreIndex.years) {
+    const y = byKey[year.key];
+    if (!y) problems.push(`exposure.json has no entry for ${year.key}`);
+    else if (typeof y.people !== 'number' || typeof y.roadKm !== 'number') problems.push(`exposure entry for ${year.key} is malformed`);
+  }
+  if (exposure.years?.length === scoreIndex.years.length) {
+    const worst = exposure.years.reduce((a, b) => (b.people > a.people ? b : a));
+    ok.push(`exposure stats for all ${exposure.years.length} years (worst: ${worst.label}, ${worst.people.toLocaleString('en-IN')} people in ≥15 cm water)`);
+  }
+}
 
 // Spot-check score tiles: right length, right field count, a real spread of scores.
 const expectedLength = (scoreIndex?.cellsPerTile ?? 24) ** 2 * (scoreIndex?.fieldCount ?? 21);
@@ -131,6 +150,7 @@ function lookup(lon, lat) {
     scores: [0, 1, 2, 3, 4].map((k) => tile.c[o + fields.SCORE + k] / 10),
     depths: [0, 1, 2, 3, 4].map((k) => tile.c[o + fields.DEPTH + k] / 100),
     wetland: tile.c[o + fields.WET],
+    pop: fields.POP !== undefined ? tile.c[o + fields.POP] : null,
   };
 }
 
@@ -144,7 +164,7 @@ for (const area of demoFile.areas) {
     continue;
   }
   if (cell.masked) problems.push(`${area.label}: the preset lands on a masked cell (sea, river or marsh)`);
-  const line = `${area.label}: scores ${cell.scores.map((s) => s.toFixed(1)).join(' / ')} · ground ${cell.elev} m · wetland term ${cell.wetland}%`;
+  const line = `${area.label}: scores ${cell.scores.map((s) => s.toFixed(1)).join(' / ')} · ground ${cell.elev} m · residents ≈${cell.pop ?? '?'} · wetland term ${cell.wetland}%`;
   log(`  ${line}`);
   ok.push(line);
 }

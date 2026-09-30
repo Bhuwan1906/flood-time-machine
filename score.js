@@ -96,6 +96,9 @@ export function readCell(tile, index) {
     score: [0, 1, 2, 3, 4].map((k) => (num(F.SCORE + k) ?? 0) / 10),
     rainThreshold: num(F.RAIN),
     wetland: (num(F.WET) ?? 0) / 100,
+    pop: num(F.POP),
+    bldc: num(F.BLDC),
+    roadd: num(F.ROADD),
     years: tile.years,
   };
 }

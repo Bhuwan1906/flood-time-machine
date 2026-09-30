@@ -97,6 +97,12 @@ Click **SRM Kattankulathur**.
 > **"Our own campus. 35 metres above sea level. One point four, even in 2070. The machine also tells
 > you where NOT to worry — that is what makes the other numbers believable."**
 
+Point at the exposure panel (right side).
+
+> **"And every year comes with its count. In 2015's water: seven-point-four lakh people, ninety-two
+> thousand buildings, three thousand kilometres of road. That is the challenge brief's question —
+> not just how deep, but what and who is exposed."**
+
 > **"It runs with no internet, on a laptop, from a folder. That is deliberate: when your city floods,
 > the towers go down. Thank you."**
 

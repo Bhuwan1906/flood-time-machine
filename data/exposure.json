@@ -1,0 +1,72 @@
+{
+  "region": "chennai",
+  "method": {
+    "affectedThresholdM": 0.15,
+    "severeThresholdM": 0.6,
+    "definition": "A cell counts as affected when the modelled water depth for that year is at least 0.15 m. Severe means at least 0.6 m (waist-deep). Population is the Census-anchored building-footprint estimate baked into the score grid.",
+    "bakedFrom": "data/score tiles (POP/BLDC/ROADD fields), one JSON per map tile"
+  },
+  "cityTotals": {
+    "people": 3309058,
+    "buildings": 379610,
+    "roadKm": 20464.8,
+    "cellsScored": 107071
+  },
+  "years": [
+    {
+      "key": "2005",
+      "label": "2005",
+      "people": 337919,
+      "peopleSevere": 159703,
+      "buildings": 37241,
+      "buildingsSevere": 17295,
+      "roadKm": 2705.4,
+      "roadKmSevere": 1275.6,
+      "cells": 14278
+    },
+    {
+      "key": "2015",
+      "label": "2015",
+      "people": 743771,
+      "peopleSevere": 312900,
+      "buildings": 91888,
+      "buildingsSevere": 38960,
+      "roadKm": 3019.5,
+      "roadKmSevere": 1380.8,
+      "cells": 14580
+    },
+    {
+      "key": "2020",
+      "label": "2020",
+      "people": 21896,
+      "peopleSevere": 11326,
+      "buildings": 3210,
+      "buildingsSevere": 1659,
+      "roadKm": 91.2,
+      "roadKmSevere": 47.8,
+      "cells": 356
+    },
+    {
+      "key": "today",
+      "label": "Today",
+      "people": 1478287,
+      "peopleSevere": 756259,
+      "buildings": 172774,
+      "buildingsSevere": 89535,
+      "roadKm": 5794.1,
+      "roadKmSevere": 2937.5,
+      "cells": 26845
+    },
+    {
+      "key": "2070",
+      "label": "2070",
+      "people": 1241648,
+      "peopleSevere": 828246,
+      "buildings": 144611,
+      "buildingsSevere": 95636,
+      "roadKm": 4325.1,
+      "roadKmSevere": 3011.2,
+      "cells": 19564
+    }
+  ]
+}

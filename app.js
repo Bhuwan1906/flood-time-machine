@@ -59,6 +59,7 @@ async function boot() {
   $('region-name').textContent = `${state.region.name} · ${state.region.state}`;
   $('brand-years').textContent = `${state.years[0].key} → ${state.years[state.years.length - 1].key}`;
   renderAttribution(manifest?.attribution);
+  loadExposure();
   buildTicks();
   buildPresets();
 
@@ -299,6 +300,33 @@ function hideResults() {
 }
 
 // ---------------------------------------------------------------- year + score
+let exposureByYear = {};
+
+function shortNum(n) {
+  if (n >= 10000000) return `${(n / 10000000).toFixed(1)} Cr`;
+  if (n >= 100000) return `${(n / 100000).toFixed(n >= 1000000 ? 1 : 2)} L`;
+  if (n >= 1000) return `${(n / 1000).toFixed(n >= 10000 ? 0 : 1)}k`;
+  return String(n);
+}
+
+async function loadExposure() {
+  try {
+    exposureByYear = Object.fromEntries((await (await fetch('data/exposure.json')).json()).years.map((y) => [y.key, y]));
+  } catch {
+    exposureByYear = {};
+  }
+}
+
+function updateExposurePanel() {
+  const year = state.years[state.yearIndex];
+  const y = exposureByYear[year.key];
+  $('exposure-year').textContent = year.label.split('—')[0].trim();
+  $('expo-people').textContent = y ? shortNum(y.people) : '–';
+  $('expo-buildings').textContent = y ? y.buildings.toLocaleString('en-IN') : '–';
+  $('expo-roads').textContent = y ? `${y.roadKm.toLocaleString('en-IN')} km` : '–';
+  $('expo-cells').textContent = y ? y.cells.toLocaleString('en-IN') : '–';
+}
+
 async function selectYear(index) {
   const clamped = Math.max(0, Math.min(state.years.length - 1, index));
   state.yearIndex = clamped;
@@ -313,6 +341,7 @@ async function selectYear(index) {
   $('score-year').textContent = year.label.split('—')[0].trim();
   $('timeline-receipt').innerHTML = receiptFor(year);
 
+  updateExposurePanel();
   await mapApi.showYear(year.key);
   await mapApi.showMeasured(year.key === 'today');
   await mapApi.refreshRiskGrid({ yearIndex: clamped, wetlands: state.wetlands });
@@ -406,6 +435,9 @@ function updateScorePanel() {
   $('fact-elev').textContent = `${cell.elevation.toFixed(1)} m`;
   $('fact-depth').textContent = describeDepth(result.depth);
   $('fact-rain').textContent = cell.rainThreshold === null ? '–' : `≈ ${cell.rainThreshold} mm in a day`;
+  $('fact-pop').textContent = cell.pop !== null && cell.pop !== undefined && cell.pop > 0
+    ? `≈ ${Math.round(cell.pop).toLocaleString('en-IN')}`
+    : (cell.bldc ? 'sparse' : '–');
 
   const note = $('wetland-note');
   if (state.wetlands && cell.wetland > 0) {
@@ -433,6 +465,8 @@ function resetBars() {
   $('fact-elev').textContent = '–';
   $('fact-depth').textContent = '–';
   $('fact-rain').textContent = '–';
+  const popEl = $('fact-pop');
+  if (popEl) popEl.textContent = '–';
 }
 
 function updateRecenter() {

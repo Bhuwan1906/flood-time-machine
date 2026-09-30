@@ -76,7 +76,7 @@ body { position: relative; }
   position: absolute; z-index: 20; display: flex; flex-direction: column; gap: 12px;
 }
 #left-column { top: 122px; left: 18px; width: 348px; max-height: calc(100vh - 340px); overflow-y: auto; }
-#right-column { top: 122px; right: 18px; width: 236px; }
+#right-column { top: 122px; right: 18px; width: 236px; max-height: calc(100vh - 330px); overflow-y: auto; }
 
 .panel {
   background: var(--panel);
@@ -177,6 +177,12 @@ body { position: relative; }
 }
 .ramp-labels { display: flex; justify-content: space-between; font-family: var(--mono); font-size: 10px; color: var(--muted); margin-top: 4px; }
 
+/* ---------------------------------------------------------------- exposure stats (challenge 4.4) */
+.expo-rows { display: flex; flex-direction: column; gap: 5px; margin-top: 8px; }
+.expo-row { display: flex; justify-content: space-between; align-items: baseline; gap: 10px; border-top: 1px solid var(--line); padding-top: 5px; }
+.expo-name { font-size: 11px; color: var(--muted); }
+.expo-val { font-family: var(--mono); font-size: 13px; color: var(--text); }
+
 /* ---------------------------------------------------------------- timeline */
 /* Full-width, centred with flex rather than a transform: the entrance animation also uses
    transform, and the two would otherwise fight each other. */
@@ -269,6 +275,7 @@ body { position: relative; }
   #right-column { top: 104px; left: 8px; right: 8px; width: auto; flex-direction: row; gap: 8px; }
   #right-column .panel { flex: 1; }
   #legend { display: none; }
+  #exposure { display: none; }
   #controls { display: grid; grid-template-columns: 1fr 1fr; gap: 6px; }
   .toggle { margin-bottom: 0; font-size: 11px; padding: 8px; }
   #left-column {

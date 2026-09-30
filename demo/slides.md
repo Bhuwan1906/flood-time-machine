@@ -65,6 +65,10 @@ Three lines underneath:
 - No model training, no AI guessing — a written formula and inspectable files.
 - **Works offline by design.** When the city floods, the towers go down.
 
+Bottom strip, small:
+
+> **Exposure counts per year (challenge 4.4):** 2015 — 7.4 lakh people · 91,888 buildings · 3,019 km of road in ≥ 15 cm of water. Today — 14.8 lakh residents in hazard zones. Population is a Census-anchored building-footprint estimate, labelled in the app.
+
 ---
 
 ## Slide 5 — Why this is a company, and what we refuse to fake

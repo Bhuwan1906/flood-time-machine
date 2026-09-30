@@ -81,6 +81,12 @@ Click **SRM Kattankulathur**.
 > "And it tells you where not to worry. Our own campus, thirty-five metres up: one-point-four, even in
 > 2070. That is what makes the other numbers believable."
 
+Point at the exposure panel on the right.
+
+> "And because a score alone is not an answer, every year comes with its count: in twenty-fifteen's
+> water sat seven-point-four lakh people, ninety-two thousand buildings and three thousand kilometres
+> of road. That is what a flood actually is — infrastructure with people on it."
+
 ---
 
 ### Shot 5 — close (2:25–2:45)
