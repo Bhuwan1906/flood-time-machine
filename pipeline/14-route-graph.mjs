@@ -34,7 +34,9 @@ const world = 2 ** (Z + Math.log2(CPT));
 const SEVERE_DEPTH_M = 0.6;   // waist-deep
 const ROAD_KINDS = new Set(['highway', 'major_road', 'minor_road']);
 const HOSPITAL_KINDS = new Set(['hospital', 'clinic', 'doctors']);
-const SHELTER_KINDS = new Set(['shelter', 'community_centre']);
+// PS 1.1 inputs name "hospitals, shelters". Chennai's designated relief shelters are overwhelmingly
+// schools and community halls, so OSM's education kinds count as shelters here — labelled as such.
+const SHELTER_KINDS = new Set(['shelter', 'community_centre', 'school', 'college', 'university', 'kindergarten']);
 const ORIGINS = [
   { id: 'velachery', label: 'Velachery — Sadasiva Nagar', lon: 80.20432, lat: 12.96218 },
   { id: 'taramani', label: 'Taramani — beside Pallikaranai marsh', lon: 80.23911, lat: 12.99162 },

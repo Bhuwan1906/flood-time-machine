@@ -60,8 +60,8 @@ now known: PS 9:00 → submit 12:00.
 The Day-2 PS (shared in advance, `problem_statement_Day2.pdf`) is **1.1: multi-hazard
 decision-support + least-risk emergency routes**. The product already answers it:
 
-- **Multi-hazard MCDM index** — "Multi-hazard index" toggle (right panel): MH = 10 × (0.45·flood hazard + 0.40·landslide susceptibility + 0.15·built exposure), per 100 m cell, per year. Landslide susceptibility (field LH) is baked from DEM slope (Zevenbergen–Thorne, 0 below 3° / 100 above 15°) by `pipeline/13-multihazard.mjs`.
-- **Least-risk emergency routes** — `pipeline/14-route-graph.mjs` builds a 101k-node road graph from the same offline tiles, prices every edge per year (cost = km × (1 + 2·risk + 3·severe[≥0.6 m])), and bakes shortest vs least-risk Dijkstra pairs from Velachery and Taramani to their nearest hospitals and shelters. The app draws them (green safe over blue shortest) and follows the year slider.
+- **Multi-hazard MCDM index** — four labelled layer buttons in the legend (Flood · Waterlogging · Landslide · MCDM): each hazard shown separately, then combined. MCDM = weighted linear combination, MH = 10 × (0.45·flood + 0.30·waterlogging + 0.15·landslide + 0.10·exposure), per 100 m cell, per year. Landslide susceptibility (field LH) is baked from DEM slope (Zevenbergen–Thorne, 0 below 3° / 100 above 15°) by `pipeline/13-multihazard.mjs`; waterlogging is the baked low-ground field shown on its own.
+- **Least-risk emergency routes** — `pipeline/14-route-graph.mjs` builds a 101k-node road graph from the same offline tiles, prices every edge per year (cost = km × (1 + 2·risk + 3·severe[≥0.6 m])), and bakes shortest vs least-risk Dijkstra pairs from Velachery and Taramani to their nearest hospitals and **1,076 relief shelters — schools and community halls**. The app draws them (green safe with white casing over blue dashed shortest), keeps the panel top-right, and follows the year slider.
 - **Honesty line rehearsed:** Chennai is flat — ~98% of cells carry zero landslide susceptibility, and the app says so. The framework re-targets to hilly cities unchanged.
 
 If the on-stage PS matches the PDF, the morning is **Scenario A (present + polish)**: confirm the
@@ -159,7 +159,7 @@ exposure ranking — which areas have the most people in harm's way — it's exa
 everything is baked into the folder. Watch:"* (then Wi-Fi is already off, because we rehearsed it).
 
 **"What did you add for this problem statement?"**
-*"For PS 1.1: a multi-hazard MCDM index — 45% flood hazard, 40% landslide susceptibility from DEM slope, 15% built exposure — as one toggle on the same grid, and a least-risk emergency-route engine: a 101,000-junction road graph built from our own offline tiles, every street priced by flood depth per year, Dijkstra run twice per origin to the nearest hospitals and shelters. Today, the shortest route from Velachery wades 0.4 km of waist-deep water; the least-risk route takes the same 1.3 km and wades 0.1 km. Shortest is not safest — the map proves it street by street, offline."*
+*"For PS 1.1: labelled multi-hazard layers — flood, waterlogging, landslide susceptibility from DEM slope — plus an explicit MCDM combined index (weighted linear combination: flood 0.45, waterlogging 0.30, landslide 0.15, exposure 0.10, with the justification on screen). And a least-risk emergency-route engine: a 101,000-junction road graph built from our own offline tiles, every street priced by flood depth per year, Dijkstra run twice per origin to the nearest hospitals and 1,076 relief shelters — schools and community halls. Today the shortest route from Velachery to a shelter wades 0.4 km of waist-deep water; the least-risk route takes 0.3 km more street and wades none. Shortest is not safest — the map proves it street by street, offline."*
 
 ---
 

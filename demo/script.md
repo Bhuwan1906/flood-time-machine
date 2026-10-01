@@ -82,10 +82,15 @@ the model — that is what a restored wetland physically does."
 Point at the two route lines leaving the pin.
 
 > **"And when the water actually comes, this map is a decision system. Blue is the shortest route to
-> the nearest relief shelter. Green is the least-risk route — same distance, but the algorithm
-> prices every street by its flood depth, and waist-deep water is priced out. Shortest wades four
-> hundred metres of knee-and-waist water; green keeps it to a hundred. The shortest route is not
-> the safe one."**
+> the nearest relief shelter — a school, the way Chennai actually shelters. Green is the least-risk
+> route: the algorithm prices every street by its flood depth, and waist-deep water is priced out.
+> Shortest wades four hundred metres of knee-and-waist water; green takes three hundred metres more
+> street and wades none. The shortest route is not the safe one."**
+>
+> **"And every hazard layer is labelled separately in the legend — flood, waterlogging, landslide —
+> then combined by an explicit MCDM weighted sum with the weights on screen: flood forty-five
+> percent, waterlogging thirty, landslide fifteen, exposure ten. Transparent arithmetic, not a
+> black box."**
 
 Tap the year slider to **2015** and back to **Today** once — the routes re-price themselves per
 year. That single gesture says "engine, not screenshots."

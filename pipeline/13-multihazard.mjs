@@ -34,7 +34,12 @@ const NF = 26;
 const LH_AT = 25;
 const SLOPE_LOW = 3;   // degrees: below this, flat as Chennai — no susceptibility
 const SLOPE_HIGH = 15; // degrees: above this, fully susceptible
-const WEIGHTS = { floodHazard: 0.45, landslide: 0.4, exposure: 0.15 };
+// MCDM: weighted linear combination over four labelled criteria.
+// Justification (stated in the app and multihazard.json): flood gets the largest weight because the
+// published record is the strongest evidence; waterlogging (low ground) is the terrain that cannot
+// drain and is visibly nonzero across Chennai; landslide is the PS's second hazard — genuinely near
+// zero on this coastal plain, and we say so; built exposure weights consequence.
+const WEIGHTS = { floodHazard: 0.45, waterlogging: 0.3, landslide: 0.15, exposure: 0.1 };
 const CLASSES = [
   { max: 2.5, label: 'low' },
   { max: 5, label: 'moderate' },
@@ -116,7 +121,7 @@ for (const [key, tile] of tiles) {
       out[o + LH_AT] = Math.round(lh * 100) / 100;
       // per-year multi-hazard class counts — same formula the app uses in the browser
       for (let k = 0; k < index.years.length; k++) {
-        const mhK = 10 * (WEIGHTS.floodHazard * ((out[o + F.HAZ + k] ?? 0) / 100) + WEIGHTS.landslide * lh / 100 + WEIGHTS.exposure * ((out[o + F.EXPO] ?? 0) / 100));
+        const mhK = 10 * (WEIGHTS.floodHazard * ((out[o + F.HAZ + k] ?? 0) / 100) + WEIGHTS.waterlogging * ((out[o + F.VULN] ?? 0) / 100) + WEIGHTS.landslide * lh / 100 + WEIGHTS.exposure * ((out[o + F.EXPO] ?? 0) / 100));
         yearByKey[index.years[k].key].counts[CLASSES.find((c) => mhK < c.max).label] += 1;
       }
     }
@@ -134,9 +139,11 @@ if (F.LH === undefined) {
   index.notes.push('LH[cell] = landslide susceptibility 0-100 from DEM slope (Zevenbergen-Thorne): 0 below 3°, 100 above 15° — PS 1.1 second hazard layer');
 }
 index.mhMeta = {
-  basis: 'MCDM weighted overlay of the flood hazard term (packed HAZ+year), landslide susceptibility from DEM slope (LH), and built exposure (EXPO)',
+  method: 'MCDM — weighted linear combination (WLC) of four normalised criteria; weights fixed a priori by expert judgement and stated here and in data/multihazard.json',
+  basis: 'flood hazard term (packed HAZ+year), waterlogging/low-ground hazard (packed VULN), landslide susceptibility from DEM slope (LH), built exposure (EXPO)',
   weights: WEIGHTS,
-  formula: 'MH = 10 * (0.45*hazard + 0.40*landslide + 0.15*exposure), computed per cell in the browser for every year',
+  justification: 'flood 0.45: published records are the strongest evidence; waterlogging 0.30: low ground that cannot drain, visible citywide; landslide 0.15: the PS second hazard, genuinely ≈0 on the Chennai plain; exposure 0.10: consequence weighting',
+  formula: 'MH = 10 * (0.45*flood + 0.30*waterlogging + 0.15*landslide + 0.10*exposure), computed per cell in the browser for every year',
   susceptibility: { lowBelowDeg: SLOPE_LOW, highAboveDeg: SLOPE_HIGH, method: 'Zevenbergen-Thorne slope on the baked elevation grid' },
   classes: CLASSES.map((c) => ({ label: c.label, below: c.max === Infinity ? null : c.max })),
   countsByYear: countsByYear.map((y) => ({ key: y.key, label: y.label, ...y.counts })),

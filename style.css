@@ -338,6 +338,19 @@ body { position: relative; }
   #left-column { max-height: calc(100vh - 280px); }
 }
 
+/* ---------------------------------------------------------------- hazard layer modes (PS 1.1) */
+.hazard-modes { display: grid; grid-template-columns: 1fr 1fr; gap: 5px; margin: 8px 0 9px; }
+.hazard-modes button {
+  background: rgba(4, 10, 20, 0.55); border: 1px solid var(--line); border-radius: 9px;
+  color: var(--muted); font-size: 11px; padding: 6px 4px; cursor: pointer; font-family: var(--sans);
+  transition: border-color 160ms ease, color 160ms ease, background 160ms ease;
+}
+.hazard-modes button:hover { border-color: var(--line-strong); color: var(--text); }
+.hazard-modes button.active {
+  color: var(--text); border-color: rgba(70, 199, 255, 0.45); background: rgba(70, 199, 255, 0.14);
+  box-shadow: 0 0 10px rgba(70, 199, 255, 0.16);
+}
+
 /* ---------------------------------------------------------------- emergency routes (PS 1.1) */
 .route-controls { display: flex; flex-direction: column; gap: 6px; margin-top: 8px; }
 .route-ctl {

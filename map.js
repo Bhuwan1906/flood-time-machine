@@ -8,7 +8,10 @@ import { state as scoreState, scoreTile, cellBounds, rampColorAt } from './score
 
 let map = null;
 let region = null;
-let current = { yearIndex: 3, wetlands: false, riskGrid: true, multiHazard: false, theme: 'dark', threeD: false };
+let current = { yearIndex: 3, wetlands: false, riskGrid: true, hazardMetric: 'flood', theme: 'dark', threeD: false };
+
+// Which packed field each hazard-layer mode reads, all normalised to 0–10 for one shared ramp.
+const HAZARD_KEYS = { water: 'g', slide: 'l', mcdm: 'm' };
 const floodCache = new Map();
 
 // Colour of the pixels behind the tiles, matched per theme so the coverage edge — even if it
@@ -105,6 +108,7 @@ function installOverlays() {
   addSource('route-risk', { type: 'geojson', data: emptyFC() });
   addSource('route-main', { type: 'geojson', data: emptyFC() });
   addSource('route-end', { type: 'geojson', data: emptyFC() });
+  addSource('route-casing', { type: 'geojson', data: emptyFC() });
   addSource('water-3d', { type: 'geojson', data: emptyFC() });
   addSource('terrain', {
     type: 'raster-dem',
@@ -207,17 +211,18 @@ function installOverlays() {
       paint: { 'line-color': '#8ef2b8', 'line-width': 1.1, 'line-dasharray': [2, 1.4] },
     });
   }
-  // Multi-hazard index mode: same 100 m cells, MCDM value m = 10*(0.45*h + 0.40*lh + 0.15*x).
+  // Hazard-layer modes (PS 1.1): the same 100 m cells re-coloured by one labelled layer at a time —
+  // waterlogging (g), landslide (l) or the combined MCDM index (m) — instead of the flood score.
   // Reuses the risk-grid source (already refreshed per viewport/year); alpha lives in the stops.
   if (!map.getLayer('mh-grid-fill')) {
     map.addLayer({
       id: 'mh-grid-fill',
       type: 'fill',
       source: 'risk-grid',
-      layout: { visibility: current.multiHazard ? 'visible' : 'none' },
+      layout: { visibility: current.hazardMetric === 'flood' ? 'none' : 'visible' },
       paint: {
         'fill-color': [
-          'interpolate', ['linear'], ['get', 'm'],
+          'interpolate', ['linear'], ['get', HAZARD_KEYS[current.hazardMetric] ?? 'm'],
           0, 'rgba(34, 197, 94, 0)', 2, 'rgba(34, 197, 94, 0.35)', 4, '#eab308', 6, '#f97316', 8, '#ef4444', 10, '#c026d3',
         ],
         'fill-opacity': 0.75,
@@ -227,13 +232,20 @@ function installOverlays() {
       id: 'mh-grid-line',
       type: 'line',
       source: 'risk-grid',
-      layout: { visibility: current.multiHazard ? 'visible' : 'none' },
+      layout: { visibility: current.hazardMetric === 'flood' ? 'none' : 'visible' },
       paint: { 'line-color': 'rgba(4, 12, 22, 0.3)', 'line-width': 0.4 },
     });
   }
   // Baked emergency routes: green = least-risk recommendation, blue = plain shortest (with the
   // flooded streets it would take), drawn under the green as a ghost so the trade-off reads at a glance.
   if (!map.getLayer('route-main-line')) {
+    map.addLayer({
+      id: 'route-main-casing',
+      type: 'line',
+      source: 'route-casing',
+      layout: { visibility: 'none', 'line-cap': 'round', 'line-join': 'round' },
+      paint: { 'line-color': 'rgba(255, 255, 255, 0.85)', 'line-width': ['interpolate', ['linear'], ['zoom'], 12, 5.5, 16, 11] },
+    });
     map.addLayer({
       id: 'route-risk-line',
       type: 'line',
@@ -323,7 +335,7 @@ function installOverlays() {
   }
   if (before) {
     // keep the overlays above the basemap water so thin rivers do not hide the risk grid
-    for (const id of ['risk-grid-fill', 'risk-grid-line', 'mh-grid-fill', 'mh-grid-line', 'flood-fill', 'flood-line', 'measured-dots', 'wetland-fill', 'wetland-line', 'route-risk-line', 'route-risk-dash', 'route-main-line', 'route-end-dot']) {
+    for (const id of ['risk-grid-fill', 'risk-grid-line', 'mh-grid-fill', 'mh-grid-line', 'flood-fill', 'flood-line', 'measured-dots', 'wetland-fill', 'wetland-line', 'route-main-casing', 'route-risk-line', 'route-risk-dash', 'route-main-line', 'route-end-dot']) {
       if (map.getLayer(id)) map.moveLayer(id);
     }
   }
@@ -434,11 +446,25 @@ export function setRiskGridVisible(visible) {
   }
 }
 
-/** Swap the flood-coloured grid for the multi-hazard MCDM index (PS 1.1). */
-export function setMultiHazardVisible(visible) {
-  current.multiHazard = visible;
+/**
+ * Show one labelled hazard layer at a time (PS 1.1: "label the layers separately and combine them"):
+ * 'flood' = the weighted-overlay score, 'water' = low-ground waterlogging hazard,
+ * 'slide' = landslide susceptibility, 'mcdm' = the combined multi-hazard index.
+ */
+export function setHazardMetric(metric) {
+  current.hazardMetric = metric;
+  const showMh = metric !== 'flood';
+  for (const id of ['risk-grid-fill', 'risk-grid-line']) {
+    if (map.getLayer(id)) map.setLayoutProperty(id, 'visibility', showMh ? 'none' : (current.riskGrid ? 'visible' : 'none'));
+  }
   for (const id of ['mh-grid-fill', 'mh-grid-line']) {
-    if (map.getLayer(id)) map.setLayoutProperty(id, 'visibility', visible ? 'visible' : 'none');
+    if (map.getLayer(id)) map.setLayoutProperty(id, 'visibility', showMh ? 'visible' : 'none');
+  }
+  if (showMh && map.getLayer('mh-grid-fill')) {
+    map.setPaintProperty('mh-grid-fill', 'fill-color', [
+      'interpolate', ['linear'], ['get', HAZARD_KEYS[metric] ?? 'm'],
+      0, 'rgba(34, 197, 94, 0)', 2, 'rgba(34, 197, 94, 0.35)', 4, '#eab308', 6, '#f97316', 8, '#ef4444', 10, '#c026d3',
+    ]);
   }
 }
 
@@ -447,8 +473,9 @@ export function setRoutes(routeFeature, riskFeature, destFeature) {
   map.getSource('route-main')?.setData(routeFeature ?? emptyFC());
   map.getSource('route-risk')?.setData(riskFeature ?? emptyFC());
   map.getSource('route-end')?.setData(destFeature ?? emptyFC());
+  map.getSource('route-casing')?.setData(routeFeature ? { ...routeFeature } : emptyFC());
   const vis = routeFeature ? 'visible' : 'none';
-  for (const id of ['route-risk-line', 'route-risk-dash', 'route-main-line', 'route-end-dot']) {
+  for (const id of ['route-main-casing', 'route-risk-line', 'route-risk-dash', 'route-main-line', 'route-end-dot']) {
     if (map.getLayer(id)) map.setLayoutProperty(id, 'visibility', vis);
   }
 }
@@ -506,6 +533,8 @@ export async function refreshRiskGrid({ yearIndex, wetlands }) {
         let masked = true;
         let bestIndex = -1;
         let bestMh = 0;
+        let bestWater = 0;
+        let bestSlide = 0;
         for (let dy = 0; dy < stride; dy++) {
           for (let dx = 0; dx < stride; dx++) {
             const cx = bx * stride + dx;
@@ -518,8 +547,11 @@ export async function refreshRiskGrid({ yearIndex, wetlands }) {
             const hazardRaw = (tile.c[o + F.HAZ + yearIndex] ?? 0) / 100;
             const atten = wetlands ? (tile.c[o + F.WET] ?? 0) / 100 : 0;
             const value = 10 * (hazardRaw * (1 - atten) + 0.3 * Math.max(0, (tile.c[o + F.VULN] ?? 0) / 100) + 0.1 * (tile.c[o + F.EXPO] ?? 0) / 100);
-            // multi-hazard MCDM index (PS 1.1): flood hazard + landslide susceptibility + exposure
-            const mh = 10 * (0.45 * hazardRaw + 0.4 * ((tile.c[o + F.LH] ?? 0) / 100) + 0.15 * ((tile.c[o + F.EXPO] ?? 0) / 100));
+            // PS 1.1 hazard layers, all normalised 0–10: waterlogging = low-ground field (g),
+            // landslide = slope susceptibility (l), MCDM = weighted linear combination (m).
+            const water10 = 10 * Math.max(0, (tile.c[o + F.VULN] ?? 0) / 100);
+            const slide10 = 10 * ((tile.c[o + F.LH] ?? 0) / 100);
+            const mh = 10 * (0.45 * hazardRaw + 0.3 * Math.max(0, (tile.c[o + F.VULN] ?? 0) / 100) + 0.15 * ((tile.c[o + F.LH] ?? 0) / 100) + 0.1 * ((tile.c[o + F.EXPO] ?? 0) / 100));
             if (value > bestScore) {
               bestScore = value;
               bestDepth = (tile.c[o + F.DEPTH + yearIndex] ?? 0) / 100;
@@ -529,6 +561,8 @@ export async function refreshRiskGrid({ yearIndex, wetlands }) {
               wet = atten;
               bestIndex = i;
               bestMh = mh;
+              bestWater = water10;
+              bestSlide = slide10;
             }
           }
         }
@@ -548,6 +582,8 @@ export async function refreshRiskGrid({ yearIndex, wetlands }) {
           v: Math.round(vuln * 100),
           x: Math.round(expo * 100),
           m: Math.round(bestMh * 10) / 10,
+          g: Math.round(bestWater * 10) / 10,
+          l: Math.round(bestSlide * 10) / 10,
           c: bestIndex,
         };
         features.push({ type: 'Feature', properties, geometry: { type: 'Polygon', coordinates: [ring] } });

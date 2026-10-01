@@ -75,7 +75,7 @@
       </div>
     </div>
     <div class="mh-row" id="mh-row" hidden>
-      <span class="mh-name" title="Multi-hazard index: 45% flood hazard + 40% landslide susceptibility + 15% built exposure (PS 1.1)">multi-hazard <span class="mh-w">0.45 / 0.40 / 0.15</span></span>
+      <span class="mh-name" title="Multi-hazard MCDM (weighted linear combination): 45% flood hazard + 30% waterlogging (low ground) + 15% landslide susceptibility + 10% built exposure. Flood leads because the published record is the strongest evidence; waterlogging is the terrain that cannot drain; landslide is the PS's second hazard (≈0 on the Chennai plain, said on screen); exposure weights consequence.">multi-hazard MCDM <span class="mh-w">.45 / .30 / .15 / .10</span></span>
       <span class="mh-dial-wrap"><svg viewBox="0 0 30 30" aria-hidden="true"><circle class="mh-track" cx="15" cy="15" r="11"></circle><circle class="mh-value" id="mh-dial" cx="15" cy="15" r="11"></circle></svg><b id="mh-value">–</b></span>
     </div>
     <p class="hint" id="mh-note" hidden></p>
@@ -94,31 +94,8 @@
 </aside>
 
 <aside id="right-column">
-  <section class="panel panel-compact" id="controls">
-    <button class="toggle" id="toggle-3d" aria-pressed="false">
-      <span class="toggle-key">3D</span>
-      <span class="toggle-text">Terrain &amp; rising water</span>
-    </button>
-    <button class="toggle" id="toggle-wetlands" aria-pressed="false">
-      <span class="toggle-key">◈</span>
-      <span class="toggle-text">Restore wetlands</span>
-    </button>
-    <button class="toggle" id="toggle-multihazard" aria-pressed="false" title="MCDM index: 45% flood hazard + 40% landslide susceptibility + 15% built exposure (PS 1.1)">
-      <span class="toggle-key">⛰</span>
-      <span class="toggle-text">Multi-hazard index</span>
-    </button>
-    <button class="toggle" id="toggle-grid" aria-pressed="true">
-      <span class="toggle-key">▦</span>
-      <span class="toggle-text">Risk grid</span>
-    </button>
-    <button class="toggle" id="toggle-theme" aria-pressed="false">
-      <span class="toggle-key">◐</span>
-      <span class="toggle-text">Light basemap</span>
-    </button>
-  </section>
-
   <section class="panel panel-compact" id="routes-panel">
-    <div class="panel-label">Emergency routes<span class="year-tag" id="route-year">today</span></div>
+    <div class="panel-label">Emergency routes · PS 1.1<span class="year-tag" id="route-year">today</span></div>
     <div class="route-controls">
       <label class="route-ctl"><span>from</span>
         <select id="route-origin"></select>
@@ -136,11 +113,36 @@
       <p class="hint" id="route-verdict"></p>
     </div>
     <p class="hint" id="route-missing" hidden>No route pair was baked for this origin, year and destination — try another combination.</p>
-    <p class="hint">Least-risk weighs distance × (1 + 2·risk + 3·severe), so waist-deep streets are priced out — the shortest route is not the safe one.</p>
+    <p class="hint">Green = <strong>least-risk</strong>, blue = plain shortest. Shelters are schools and community halls (how Chennai actually shelters). Cost = km × (1 + 2·risk + 3·severe): waist-deep streets are priced out.</p>
+  </section>
+
+  <section class="panel panel-compact" id="controls">
+    <button class="toggle" id="toggle-3d" aria-pressed="false">
+      <span class="toggle-key">3D</span>
+      <span class="toggle-text">Terrain &amp; rising water</span>
+    </button>
+    <button class="toggle" id="toggle-wetlands" aria-pressed="false">
+      <span class="toggle-key">◈</span>
+      <span class="toggle-text">Restore wetlands</span>
+    </button>
+    <button class="toggle" id="toggle-grid" aria-pressed="true">
+      <span class="toggle-key">▦</span>
+      <span class="toggle-text">Risk grid</span>
+    </button>
+    <button class="toggle" id="toggle-theme" aria-pressed="false">
+      <span class="toggle-key">◐</span>
+      <span class="toggle-text">Light basemap</span>
+    </button>
   </section>
 
   <section class="panel panel-compact" id="legend">
-    <div class="panel-label">Risk score</div>
+    <div class="panel-label">Hazard layers · PS 1.1</div>
+    <div class="hazard-modes" id="hazard-modes">
+      <button type="button" data-metric="flood" class="active">Flood</button>
+      <button type="button" data-metric="water">Waterlogging</button>
+      <button type="button" data-metric="slide">Landslide</button>
+      <button type="button" data-metric="mcdm">MCDM</button>
+    </div>
     <div class="ramp"></div>
     <div class="ramp-labels"><span>0</span><span>5</span><span>10</span></div>
     <p class="hint" id="mode-note">Each square is a 100 m cell. Colours are pre-computed risk, so the whole city is already scored before you click.</p>

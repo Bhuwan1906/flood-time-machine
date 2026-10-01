@@ -27,7 +27,16 @@ const state = {
   places: [],
   demoAreas: [],
   routes: null,
+  hazardMetric: 'flood',
 };
+
+const HAZARD_NOTES = {
+  flood: 'Each square is a 100 m cell. Colours are pre-computed risk, so the whole city is already scored before you click.',
+  water: 'Hazard layer 1/3 — waterlogging: low ground that cannot drain (the same terrain term the flood score uses, shown on its own).',
+  slide: 'Hazard layer 2/3 — landslide susceptibility from DEM slope. Chennai is a coastal plain: ~98% of cells are zero, and the app says so — re-target the pipeline to a hilly city and this term wakes up.',
+  mcdm: 'Hazard layer 3/3 — MCDM combined index (weighted linear combination): flood 0.45 + waterlogging 0.30 + landslide 0.15 + built exposure 0.10.',
+};
+const HAZARD_ORDER = ['flood', 'water', 'slide', 'mcdm'];
 
 const els = {};
 
@@ -76,6 +85,7 @@ async function boot() {
   // Something on screen straight away for anyone arriving from a QR code.
   const first = state.demoAreas[0];
   if (first) {
+    syncRouteOrigin(first.id);
     await goTo(first.preset[0], first.preset[1], `${first.label} — ${first.subtitle}`, { fly: true });
   }
   updateRecenter();
@@ -136,7 +146,10 @@ function buildPresets() {
     button.type = 'button';
     button.textContent = area.label;
     button.title = `${area.whyShort} (${area.subtitle})`;
-    button.addEventListener('click', () => goTo(area.preset[0], area.preset[1], `${area.label} — ${area.subtitle}`, { fly: true }));
+    button.addEventListener('click', () => {
+      syncRouteOrigin(area.id);
+      goTo(area.preset[0], area.preset[1], `${area.label} — ${area.subtitle}`, { fly: true });
+    });
     wrap.appendChild(button);
   }
 }
@@ -156,8 +169,19 @@ function buildRoutePanel() {
     option.textContent = origin.label;
     originSel.appendChild(option);
   }
+  originSel.value = state.routes.origins[0].id;
   originSel.addEventListener('change', updateRouteBox);
   roleSel.addEventListener('change', updateRouteBox);
+}
+
+/** Demo-area clicks keep the route origin in sync, so one click shows map + routes together. */
+function syncRouteOrigin(areaId) {
+  const sel = $('route-origin');
+  if (!sel || !state.routes) return;
+  if ([...sel.options].some((option) => option.value === areaId)) {
+    sel.value = areaId;
+    updateRouteBox();
+  }
 }
 
 function updateRouteYear() {
@@ -270,17 +294,11 @@ function wire() {
     mapApi.setRiskGridVisible(state.grid);
   });
 
-  const mhBtn = $('toggle-multihazard');
-  if (mhBtn) {
-    mhBtn.addEventListener('click', () => {
-      state.multiHazard = !state.multiHazard;
-      setPressed('toggle-multihazard', state.multiHazard);
-      mapApi.setMultiHazardVisible(state.multiHazard);
-      $('mode-note').textContent = state.multiHazard
-        ? 'Multi-hazard index (PS 1.1): 45% flood hazard + 40% landslide susceptibility + 15% built exposure, per 100 m cell.'
-        : 'Each square is a 100 m cell. Colours are pre-computed risk, so the whole city is already scored before you click.';
-      updateScorePanel();
-    });
+  const modesWrap = $('hazard-modes');
+  if (modesWrap) {
+    for (const button of modesWrap.querySelectorAll('button')) {
+      button.addEventListener('click', () => setHazardMetric(button.dataset.metric));
+    }
   }
 
   $('toggle-theme').addEventListener('click', async () => {
@@ -313,7 +331,7 @@ function wire() {
     if (event.key === '3') $('toggle-3d').click();
     if (event.key.toLowerCase() === 'w') $('toggle-wetlands').click();
     if (event.key.toLowerCase() === 'g') $('toggle-grid').click();
-    if (event.key.toLowerCase() === 'm' && $('toggle-multihazard')) $('toggle-multihazard').click();
+    if (event.key.toLowerCase() === 'm') cycleHazardMetric();
     if (event.key.toLowerCase() === 'l') $('toggle-theme').click();
     if (event.key === ' ') { event.preventDefault(); togglePlay(); }
   });
@@ -321,6 +339,23 @@ function wire() {
 
 function setPressed(id, value) {
   $(id).setAttribute('aria-pressed', value ? 'true' : 'false');
+}
+
+// PS 1.1 hazard layers: Flood / Waterlogging / Landslide / combined MCDM — one at a time, labelled.
+function setHazardMetric(metric) {
+  state.hazardMetric = metric;
+  mapApi.setHazardMetric(metric);
+  const wrap = $('hazard-modes');
+  if (wrap) {
+    for (const button of wrap.querySelectorAll('button')) button.classList.toggle('active', button.dataset.metric === metric);
+  }
+  $('mode-note').textContent = HAZARD_NOTES[metric];
+  updateScorePanel();
+}
+
+function cycleHazardMetric() {
+  const next = HAZARD_ORDER[(HAZARD_ORDER.indexOf(state.hazardMetric) + 1) % HAZARD_ORDER.length];
+  setHazardMetric(next);
 }
 
 // ---------------------------------------------------------------- address handling
@@ -656,7 +691,12 @@ function updateScorePanel() {
 
 // ---------------------------------------------------------------- multi-hazard readout (PS 1.1)
 function mhIndex(cell, yearIndex) {
-  return 10 * (0.45 * (cell.hazard[yearIndex] ?? 0) + 0.4 * (cell.lh ?? 0) + 0.15 * (cell.expo ?? 0));
+  return 10 * (
+    0.45 * (cell.hazard[yearIndex] ?? 0) +
+    0.3 * Math.max(0, cell.vuln ?? 0) +
+    0.15 * (cell.lh ?? 0) +
+    0.1 * (cell.expo ?? 0)
+  );
 }
 
 function describeSlope(lh) {
@@ -678,9 +718,9 @@ function updateMh(cell, yearIndex, result) {
   dial.style.stroke = band.color;
   $('mh-value').textContent = mh.toFixed(1);
   const note = $('mh-note');
-  note.hidden = !state.multiHazard;
-  if (state.multiHazard) {
-    note.textContent = `flood hazard ${(result.hazard * 10).toFixed(1)} × 0.45 · landslide ${((cell.lh ?? 0) * 10).toFixed(1)} × 0.40 · built ${((cell.expo ?? 0) * 10).toFixed(1)} × 0.15`;
+  note.hidden = state.hazardMetric !== 'mcdm';
+  if (state.hazardMetric === 'mcdm') {
+    note.textContent = `MCDM = flood ${(result.hazard * 10).toFixed(1)}×.45 + waterlogging ${(Math.max(0, cell.vuln) * 10).toFixed(1)}×.30 + landslide ${((cell.lh ?? 0) * 10).toFixed(1)}×.15 + built ${((cell.expo ?? 0) * 10).toFixed(1)}×.10`;
   }
 }
 

@@ -130,7 +130,7 @@ if (!mhFile) {
 } else if (!scoreIndex || (scoreIndex.fieldCount ?? 0) < 26) {
   problems.push('score tiles lack the LH landslide field — run pipeline/13-multihazard.mjs');
 } else {
-  ok.push(`multi-hazard MCDM: weights ${mhFile.weights.floodHazard}/${mhFile.weights.landslide}/${mhFile.weights.exposure} (flood/landslide/exposure), per-year counts for ${mhFile.byYear?.length ?? 0} years`);
+  ok.push(`multi-hazard MCDM (WLC): weights ${mhFile.weights.floodHazard}/${mhFile.weights.waterlogging}/${mhFile.weights.landslide}/${mhFile.weights.exposure} (flood/waterlogging/landslide/exposure), per-year counts for ${mhFile.byYear?.length ?? 0} years`);
 }
 
 // Spot-check score tiles: right length, right field count, a real spread of scores.

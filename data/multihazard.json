@@ -1,12 +1,13 @@
 {
-  "built": "2026-10-01T04:12:41.656Z",
+  "built": "2026-10-01T05:31:18.604Z",
   "region": "chennai",
   "weights": {
     "floodHazard": 0.45,
-    "landslide": 0.4,
-    "exposure": 0.15
+    "waterlogging": 0.3,
+    "landslide": 0.15,
+    "exposure": 0.1
   },
-  "formula": "MH = 10 * (0.45*hazard + 0.40*landslide + 0.15*exposure), computed per cell in the browser for every year",
+  "formula": "MH = 10 * (0.45*flood + 0.30*waterlogging + 0.15*landslide + 0.10*exposure), computed per cell in the browser for every year",
   "susceptibility": {
     "lowBelowDeg": 3,
     "highAboveDeg": 15,
@@ -36,9 +37,9 @@
       "key": "2005",
       "label": "2005 — GCC flood extent",
       "counts": {
-        "low": 205452,
-        "moderate": 1836,
-        "high": 3,
+        "low": 169522,
+        "moderate": 37190,
+        "high": 579,
         "very high": 0
       }
     },
@@ -46,9 +47,9 @@
       "key": "2015",
       "label": "2015 — NRSC flood inundation zone",
       "counts": {
-        "low": 205315,
-        "moderate": 1967,
-        "high": 9,
+        "low": 166455,
+        "moderate": 40266,
+        "high": 570,
         "very high": 0
       }
     },
@@ -56,9 +57,9 @@
       "key": "2020",
       "label": "2020 — Cyclone Nivar hotspots",
       "counts": {
-        "low": 206619,
-        "moderate": 672,
-        "high": 0,
+        "low": 172235,
+        "moderate": 35027,
+        "high": 29,
         "very high": 0
       }
     },
@@ -66,9 +67,9 @@
       "key": "today",
       "label": "Today — city flood hazard zoning",
       "counts": {
-        "low": 205131,
-        "moderate": 2151,
-        "high": 9,
+        "low": 163452,
+        "moderate": 43106,
+        "high": 733,
         "very high": 0
       }
     },
@@ -76,9 +77,9 @@
       "key": "2070",
       "label": "2070 — 200-year return period corridors",
       "counts": {
-        "low": 204165,
-        "moderate": 3125,
-        "high": 1,
+        "low": 164810,
+        "moderate": 40627,
+        "high": 1854,
         "very high": 0
       }
     }
