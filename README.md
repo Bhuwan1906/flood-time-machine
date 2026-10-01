@@ -1,8 +1,10 @@
 # Flood Time Machine
 
-**Type any Chennai address. Drag a time slider from 2005 to 2070. Watch that one street's flood risk change.**
+**Type any Chennai address. Drag a time slider from 2005 to 2070. Watch that one street's flood risk change — and when the water comes, take the least-risk route to shelter, not the shortest one.**
 
-Built for **GEO IMPATHON 1.0** at SRMIST, Chennai — domain: **Disaster Risk Analysis**.
+Built for **GEO IMPATHON 1.0** at SRMIST, Chennai — domain: **Disaster Risk Analysis**. Final-round
+problem statement 1.1: *multi-hazard geospatial decision support + least-risk emergency routes.*
+This repo answers it end to end (see [Multi-hazard and emergency routes](#multi-hazard-and-emergency-routes-ps-11)).
 
 Live: **https://flood-time-machine.pages.dev** · Video: _<add the YouTube link here>_
 
@@ -19,6 +21,11 @@ Live: **https://flood-time-machine.pages.dev** · Video: _<add the YouTube link 
 5. Press **3D** and the same map tips over: real satellite terrain, and the water is raised to each
    cell's modelled depth.
 6. Flip **Restore wetlands** and the hazard term drops where marshland sat within 400 m of the pin.
+7. Switch hazard layers in the legend — **Flood · Waterlogging · Landslide · MCDM** — each labelled
+   separately, then combined.
+8. Open **Emergency routes** and pick an origin and a destination type: the map draws the plain
+   shortest route and the least-risk route to the nearest hospital or relief shelter, re-priced for
+   whichever year is on the slider.
 
 Nothing is guessed by a language model. Every number traces back to a published dataset, and the whole
 thing runs with the wifi switched off.
@@ -45,17 +52,17 @@ A 100% static web app. No backend, no database, no accounts, no API keys, and no
 time — every click is a file lookup.
 
 ```
-index.html      the whole UI: map, search, score dial, timeline, toggles
-app.js          orchestration — state, address search, year timeline, score panel, keyboard
-map.js          MapLibre setup: offline basemap, terrain, flood layers, the risk grid
+index.html      the whole UI: map, search, score dial, routes panel, hazard-layer tabs, timeline
+app.js          orchestration — state, address search, year timeline, score panel, routes, keyboard
+map.js          MapLibre setup: offline basemap, terrain, flood layers, risk grid, route lines
 score.js        score lookups: address -> 100 m cell -> baked numbers, plus the wetland counterfactual
 three-d.js      the 3D view: terrain exaggeration, building massing, rising water
 style.css       the instrument-panel look
 server.mjs      a ~120-line static server so the folder runs with no internet and no dependencies
 start.bat       double-click launcher for the Windows demo laptop
-data/           everything pre-baked: basemap, terrain, scores, flood records, fonts, libraries
-pipeline/       the seven Node scripts that built data/ (run before the event, never during)
-demo/           the live script, the slides, the video shot list
+data/           everything pre-baked: basemap, terrain, scores, flood records, routes, fonts, libs
+pipeline/       the fourteen Node scripts that built data/ (run before the event, never during)
+demo/           the live script, the judge card, and the printable presentation pack (demo/present/)
 ```
 
 One renderer does both 2D and 3D: the 3D view is the same map, tilted, with terrain switched on and
@@ -109,7 +116,59 @@ today is #86 Ambattur at ~25,600 exposed residents — downloadable as **CSV** s
 panel. That file is the deliverable form of "affected infrastructure statistics": a ward officer
 or an insurer can open it in a spreadsheet, offline, today.
 
-## The data
+## Multi-hazard and emergency routes (PS 1.1)
+
+### The MCDM index, stated openly
+
+The per-address score above is itself a weighted linear combination — the classic MCDM workhorse —
+and the app labels it as such. The combined multi-hazard index adds the PS's second hazard and
+weights consequence:
+
+```
+MH = 10 × ( 0.45 × flood hazard          // the published-record term, per year
+          + 0.30 × waterlogging          // low ground that cannot drain (the terrain term, on its own)
+          + 0.15 × landslide             // DEM-slope susceptibility: 0 below 3°, 100 above 15°
+          + 0.10 × built exposure )      // land use + measured footprints
+```
+
+Weights are fixed a priori by expert judgement and printed on screen and in `data/multihazard.json`.
+We also tested them: perturbing every weight by ±20% leaves the top-100 risk ranking **100%
+intact** (3,000 sampled cells). The conclusion does not depend on the exact weights.
+
+Landslide susceptibility comes from Zevenbergen–Thorne slope on the baked elevation grid
+(`pipeline/13-multihazard.mjs`, field `LH` in every score tile). Chennai is a coastal plain, so the
+layer reads near-zero — ~98% of cells — and the app says so, naming St. Thomas Mount and the Guindy
+ridge as the only real slopes. A near-empty layer that is honestly explained is a finding; the same
+pipeline re-targets to a hilly city unchanged.
+
+### The least-risk route engine
+
+`pipeline/14-route-graph.mjs` builds a routable road graph — **101,150 junctions, ~199,000 edge
+pairs** — from the same offline z15 tiles the map already serves, and prices every street edge with
+its per-year flood risk:
+
+```
+edge cost = km × ( 1 + 2 × risk + 3 × severe )     // severe = modelled depth ≥ 0.6 m (waist-deep)
+```
+
+Dijkstra then runs twice per origin — once for plain distance, once for least risk — to the nearest
+destinations of each type: **1,845 hospitals/clinics** and **1,076 relief shelters** (schools,
+colleges and community halls — how Chennai actually shelters). Origin neighbourhoods are the
+worst-exposed flood bowls (Velachery, Taramani, Ambattur); adding one is a one-line change and a
+9-second re-bake, fully offline. Route pairs are baked for every year on the slider, so sliding from
+2015 to today re-prices every street on screen.
+
+The receipts, today, from Velachery: the **shortest** route to the nearest shelter (King's Matric
+Hr Sec School, 1.1 km) wades **0.4 km of waist-deep water**; the **least-risk** route (1.4 km to
+BrightPath Play School) wades **none**. Shortest is not safest — the map proves it street by street.
+
+### Route and hazard data files
+
+| File | Contents |
+|---|---|
+| `data/routes/routes.json` | baked route pairs (origin × role × year × mode), with per-edge depth/risk |
+| `data/routes/graph-meta.json` | graph stats: nodes, edges, hospital/shelter counts |
+| `data/multihazard.json` | MCDM weights, justification, sensitivity note, per-year class counts |
 
 | Layer | Source | What ships |
 |---|---|---|
@@ -201,7 +260,9 @@ npm run build:score        # 06 THE BRAIN: bake the per-cell, per-year score gri
 npm run build:all          # 07 Promote the year layers, write receipts, manifest, integrity check
 node pipeline/10-population.mjs   # 10 Residents, buildings, road metres per cell (challenge 4.4)
 node pipeline/11-exposure.mjs     # 11 Per-year citywide exposure statistics -> data/exposure.json
-npm run verify             # 08 Pre-demo check: is every lookup going to succeed?
+npm run build:multihazard # 13 Landslide susceptibility field + MCDM metadata (PS 1.1)
+npm run build:routes      # 14 Road graph + least-risk vs shortest route pairs (PS 1.1)
+npm run verify            # 08 Pre-demo check: is every lookup going to succeed? (38 checks)
 ```
 
 `npm run verify` is the one to run before you demo. It confirms the data is complete and parseable,
@@ -211,6 +272,11 @@ Payload after a full build: **~90 MB** (basemap 31 MB, terrain 36 MB, scores 14 
 fonts and libraries 3 MB). Raw downloads live in `.cache/` and are not committed.
 
 ## Known limits
+
+- Route pairs are pre-baked from the configured origin neighbourhoods (any origin is a one-line
+  change plus a 9-second offline re-bake, but the shipped data covers the baked set).
+- Route edge risk samples the packed grid at each segment's midpoint; a ~50 m segment inherits one
+  cell's depth. Refinement would interpolate along the segment.
 
 - The 2015 rainfall figure comes from gridded reanalysis, which under-reports local extremes: real
   gauge records for 1 December 2015 are higher than the ~116 mm/day in this dataset. The app labels

@@ -46,14 +46,15 @@ zero, said on screen. Combined-index counts today: 43,106 moderate + 733 high ce
 
 Graph: **101,150 junctions · ~199,000 edge pairs** from the same offline tiles.
 Destinations: **1,845 hospitals/clinics · 1,076 shelters** (schools & community halls).
-Cost = km × (1 + 2·risk + 3·severe[≥0.6 m]). Baked per origin × role × year; Dijkstra, fully offline.
+Origins: **Velachery · Taramani · Ambattur (worst ward #86)**. Cost = km × (1 + 2·risk + 3·severe[≥0.6 m]). Baked per origin × role × year; Dijkstra, fully offline.
 
 **The receipt to lead with (Velachery → shelter, today):**
 shortest = 1.1 km to King's Matric Hr Sec School, **0.4 km of it in ≥0.6 m water**;
 least-risk = 1.4 km to BrightPath Play School, **0 km in ≥0.6 m water.**
 Also today: Taramani → hospital 1.5 km (0.5 severe) vs 1.7 km (0.2 severe) ·
 Taramani → shelter 0.7 km (0.4 severe) vs 0.8 km (0.1 severe) ·
-Velachery → hospital 0.5/0.5 severe vs 0.5/0.2 severe.
+Velachery → hospital 0.5/0.5 severe vs 0.5/0.2 severe ·
+**Ambattur → hospital 1.8 km with 0.6 km severe vs same 1.8 km with 0.2 km severe** (equal distance, 67% less waist-deep water).
 Shortest-route city totals per year (the case for least-risk): 2005: 0.3 km severe ·
 2015: 1.2 km · today: **1.8 km in ≥0.6 m water** · 2070: 1.7 km.
 

@@ -40,6 +40,7 @@ const SHELTER_KINDS = new Set(['shelter', 'community_centre', 'school', 'college
 const ORIGINS = [
   { id: 'velachery', label: 'Velachery — Sadasiva Nagar', lon: 80.20432, lat: 12.96218 },
   { id: 'taramani', label: 'Taramani — beside Pallikaranai marsh', lon: 80.23911, lat: 12.99162 },
+  { id: 'ambattur', label: 'Ambattur — worst ward for exposure', lon: 80.15671, lat: 13.09954 },
 ];
 const perOrigin = 2;
 
