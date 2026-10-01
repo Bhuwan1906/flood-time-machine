@@ -55,6 +55,19 @@ now known: PS 9:00 → submit 12:00.
 
 ---
 
+## PS 1.1 IS ALREADY BUILT — the verdict is pre-decided
+
+The Day-2 PS (shared in advance, `problem_statement_Day2.pdf`) is **1.1: multi-hazard
+decision-support + least-risk emergency routes**. The product already answers it:
+
+- **Multi-hazard MCDM index** — "Multi-hazard index" toggle (right panel): MH = 10 × (0.45·flood hazard + 0.40·landslide susceptibility + 0.15·built exposure), per 100 m cell, per year. Landslide susceptibility (field LH) is baked from DEM slope (Zevenbergen–Thorne, 0 below 3° / 100 above 15°) by `pipeline/13-multihazard.mjs`.
+- **Least-risk emergency routes** — `pipeline/14-route-graph.mjs` builds a 101k-node road graph from the same offline tiles, prices every edge per year (cost = km × (1 + 2·risk + 3·severe[≥0.6 m])), and bakes shortest vs least-risk Dijkstra pairs from Velachery and Taramani to their nearest hospitals and shelters. The app draws them (green safe over blue shortest) and follows the year slider.
+- **Honesty line rehearsed:** Chennai is flat — ~98% of cells carry zero landslide susceptibility, and the app says so. The framework re-targets to hilly cities unchanged.
+
+If the on-stage PS matches the PDF, the morning is **Scenario A (present + polish)**: confirm the
+match in minutes, spend 9:20–11:15 on rehearsal — never on new features. If it differs, run the
+decision rule below as written.
+
 ## THE OFFICIAL CLOCK — Wed Oct 1 (Scenario B — adapt)
 
 | Time | Block | What happens |
@@ -63,7 +76,7 @@ now known: PS 9:00 → submit 12:00.
 | 8:30–9:00 | Settle in | Boot laptop, open the project folder, re-test start.bat, check the WhatsApp group, quiet the team |
 | 9:00–9:20 | Decision rule | Above. Verdict + one-liner + rubric mapped to features. PS text → agent |
 | 9:20–10:20 | Bake | Copy folder (Rule Zero) · regions.json entry (fields below) · pipeline re-run, **fetch steps 01/02/03/04/05 in parallel terminals** (verified independent: only 05 writes receipts.json, 07 reads it later) |
-| 10:20–10:50 | Prove it | `08-verify` must pass → `node server.mjs` → offline smoke test of demo areas (Wi-Fi off) · rename the 4 Chennai strings · rewrite judge-card headline numbers |
+| 10:20–10:50 | Prove it | `08-verify` must pass (now 38 checks incl. routes + multi-hazard) → `node server.mjs` → offline smoke test of demo areas (Wi-Fi off) · toggle **Multi-hazard index** · open **Emergency routes**, flip origin/role and slide 2015↔Today — routes must re-price · rename the 4 Chennai strings · rewrite judge-card headline numbers |
 | 10:50–11:15 | Rehearse | ONE full pass with the 3-min cut. Team talks while the agent fixes nits |
 | 11:15 | **HARD FREEZE** | Nothing new gets built. Polish the closing line. Breathe |
 | 11:30–11:45 | SUBMIT | Never cut a deadline to the wire — beat 12:00 by 15 minutes |
@@ -93,7 +106,11 @@ node pipeline/09-coverage.mjs                # local: coverage outline (no regio
 node pipeline/10-population.mjs  NEWCITY     # local: people/buildings/roads/critical sites
 node pipeline/11-exposure.mjs    NEWCITY     # local: per-year exposure stats
 node pipeline/12-wards.mjs       NEWCITY     # local: ward table + CSV data
+node pipeline/13-multihazard.mjs NEWCITY     # local: landslide field (LH) + multi-hazard metadata
+node pipeline/14-route-graph.mjs NEWCITY     # local: road graph + least-risk vs shortest route pairs
 ```
+
+The two PS-1.1 steps (13/14) are local-only and fast (<10 s each) — run them right after 12.
 
 **The hazard layer (03) is the only PS-specific step.** Everything after it — scoring, exposure
 statistics, wards, CSV — is hazard-agnostic and runs untouched. If the new city's flood data
@@ -141,7 +158,8 @@ exposure ranking — which areas have the most people in harm's way — it's exa
 *"It can't — the entire app is offline. Basemap tiles, terrain, flood layers, the score grid,
 everything is baked into the folder. Watch:"* (then Wi-Fi is already off, because we rehearsed it).
 
-**"What did you add for this problem statement?"** *(fill in during 9:00–9:20 after reading the PS)*
+**"What did you add for this problem statement?"**
+*"For PS 1.1: a multi-hazard MCDM index — 45% flood hazard, 40% landslide susceptibility from DEM slope, 15% built exposure — as one toggle on the same grid, and a least-risk emergency-route engine: a 101,000-junction road graph built from our own offline tiles, every street priced by flood depth per year, Dijkstra run twice per origin to the nearest hospitals and shelters. Today, the shortest route from Velachery wades 0.4 km of waist-deep water; the least-risk route takes the same 1.3 km and wades 0.1 km. Shortest is not safest — the map proves it street by street, offline."*
 
 ---
 

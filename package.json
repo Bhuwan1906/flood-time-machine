@@ -14,6 +14,8 @@
     "fetch:rainfall": "node pipeline/05-fetch-rainfall.mjs",
     "build:score": "node pipeline/06-score-grid.mjs",
     "build:all": "node pipeline/07-bundle.mjs",
+    "build:multihazard": "node pipeline/13-multihazard.mjs",
+    "build:routes": "node pipeline/14-route-graph.mjs",
     "verify": "node pipeline/08-verify.mjs"
   },
   "comment": "These four are needed by the data pipeline only. The app itself has no dependencies at runtime: MapLibre and PMTiles are vendored into data/vendor/.",

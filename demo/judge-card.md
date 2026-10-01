@@ -6,7 +6,7 @@
 
 ## THE ONE-LINER
 
-**"Type any Chennai address, slide through 20 years of flood records, and see your street's risk — then restore the wetlands and watch it fall."**
+**"Type any Chennai address, slide through 20 years of flood records, and see your street's risk — then restore the wetlands and watch it fall. And in a flood, it picks the safest route to a hospital or shelter — least-risk, not simply shortest."**
 
 ---
 
@@ -44,6 +44,10 @@ No ML anywhere. Every cell's score is explainable in 30 seconds. Weights live in
 
 **LAND USE + WARDS (the deliverable):** built-up land in today's water — **12.4 km² residential · 5.7 commercial · 22.0 industrial.** Worst ward today: **#86 Ambattur, ~25,600 people.** The app downloads the full ranked 201-ward table as CSV — statistics in usable form, no login, works offline.
 
+**MULTI-HAZARD INDEX (PS 1.1 — the MCDM layer):** one tap, right panel: the same 100 m grid re-coloured by the combined index **MH = 10 × (0.45 × flood hazard + 0.40 × landslide susceptibility + 0.15 × built exposure)**. Landslide susceptibility comes from DEM slope (Zevenbergen–Thorne: 0 below 3°, 100 above 15°) and the score panel now shows it per cell. **Honesty line to say out loud:** "Chennai is coastal plain — 98% of cells have zero landslide susceptibility, and the app says so. The layer proves the multi-hazard framework: re-target the same pipeline to a hilly city and the term wakes up unchanged."
+
+**EMERGENCY ROUTES (PS 1.1 — the least-risk engine):** a road graph built from the same offline tiles — **101,150 junctions, ~199,000 edge pairs, 1,845 hospitals/clinics + 119 shelters** — with every street edge priced by its per-year flood risk. Dijkstra runs twice per origin (Velachery, Taramani) per year: **plain shortest, then least-risk with cost = km × (1 + 2·risk + 3·severe)**, where severe = waist-deep (≥0.6 m). Baked offline, drawn as green (safe) over blue (shortest), and the routes follow the year slider. The receipts, today: **Velachery → shelter: same 1.3 km, but the shortest route wades 0.4 km of ≥0.6 m water vs 0.1 km on least-risk — 75% less waist-deep street for zero extra distance.** Taramani → hospital: shortest 1.5 km (0.5 km severe) vs least-risk 1.7 km (0.2 km severe). Say it as: "the shortest route is not the safe one, and now the map proves it street by street."
+
 ---
 
 ## TOP 10 JUDGE ANSWERS (one breath each)
@@ -69,6 +73,10 @@ No ML anywhere. Every cell's score is explainable in 30 seconds. Weights live in
 10. **"Who is it for?"** → Residents, journalists, ward officers — anyone who needs their street's risk in 10 seconds. Public data, MIT license; if GCC built this themselves, we'd have won.
 
 11. **"Where do the population numbers come from?"** → A gridded estimate, labelled as such: building footprints ÷ 85 m² per household × 3.51 persons (Census 2011 TN). WorldPop/GHSL rasters are coarser than a city block; no street-level census exists in India. Ours is a comparison tool across years and streets — and the footer credits it as an estimate, not a census.
+
+12. **"Multi-hazard — isn't Chennai flat?"** → Yes, and we say so on screen: landslide susceptibility is ~0 for 98% of cells. But the PS asks for a multi-hazard system, and the honest answer is a framework that already carries flood + landslide + exposure — same pipeline, same MCDM math, one regions.json entry re-targets it to Nilgiris or Mumbai where the landslide term dominates.
+
+13. **"How does the least-risk route work?"** → Dijkstra on the OSM road graph with per-edge flood pricing: cost = km × (1 + 2 × risk + 3 × severe[≥0.6 m]). Distance still wins on dry streets, so it never detours for nothing — but waist-deep streets get priced out. Both routes are precomputed per year and work fully offline, because in a flood the towers are down.
 
 ---
 

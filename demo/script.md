@@ -15,7 +15,7 @@ Say the words in bold out loud. Everything else is instruction for you, not for 
    so nothing pauses in front of the judges.
 4. Turn wifi **off**. Confirm the map still works. Leave it off for the demo if the venue wifi is bad
    — that is a feature, and you get to say so.
-5. Leave the app on **Today** and on the **Velachery** stop.
+5. Leave the app on **Today** and on the **Velachery** stop. Open the **Emergency routes** panel (right side): From *Velachery*, to nearest *relief shelter* — the green/blue pair should already be on the map.
 6. Have the QR code, the hosted URL and the backup video ready on the slide laptop.
 
 ---
@@ -77,6 +77,23 @@ slider to **2070**, click **Taramani**, then hit **Restore wetlands** and let th
 wetlands what-if is the differentiator — it is the one thing no other team will show. Say why the
 number drops: "the score falls because the cells next to the marsh get their hazard term back in
 the model — that is what a restored wetland physically does."
+## Stop 3.6 — the escape (30 seconds, PS 1.1) · still Velachery
+
+Point at the two route lines leaving the pin.
+
+> **"And when the water actually comes, this map is a decision system. Blue is the shortest route to
+> the nearest relief shelter. Green is the least-risk route — same distance, but the algorithm
+> prices every street by its flood depth, and waist-deep water is priced out. Shortest wades four
+> hundred metres of knee-and-waist water; green keeps it to a hundred. The shortest route is not
+> the safe one."**
+
+Tap the year slider to **2015** and back to **Today** once — the routes re-price themselves per
+year. That single gesture says "engine, not screenshots."
+
+> **"If the judges push: the road graph is a hundred and one thousand junctions built from the same
+> offline tiles, Dijkstra runs per year, and it works with the towers down — which is exactly when
+> you need an escape route."**
+
 ## Stop 4 — the greener earth (3:30–4:15) · Taramani
 
 Click **Taramani**.

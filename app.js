@@ -2,7 +2,8 @@
 //
 // Flow: load the pre-baked indexes, draw the map, then every interaction is a lookup. Switching year
 // changes the published flood layer, the risk grid and the score; switching on 3D tips the same map
-// over and lifts the water to each cell's modelled depth.
+// over and lifts the water to each cell's modelled depth. PS 1.1 adds two surfaces: a multi-hazard
+// MCDM index mode for the same grid, and the baked least-risk vs shortest emergency-route pairs.
 
 import * as score from './score.js';
 import * as mapApi from './map.js';
@@ -25,6 +26,7 @@ const state = {
   playing: false,
   places: [],
   demoAreas: [],
+  routes: null,
 };
 
 const els = {};
@@ -40,19 +42,21 @@ async function boot() {
     if (count === 0) setTimeout(() => { els.loadingBar.style.width = '0%'; }, 420);
   };
 
-  const [regions, scoreIndex, floodIndex, manifest, placesFile, demoFile] = await Promise.all([
+  const [regions, scoreIndex, floodIndex, manifest, placesFile, demoFile, routesFile] = await Promise.all([
     fetch('data/regions.json').then((r) => r.json()),
     score.loadScoreIndex(),
     fetch('data/flood/index.json').then((r) => r.json()),
     fetch('data/manifest.json').then((r) => r.json()).catch(() => null),
     fetch('data/places.json').then((r) => r.json()),
     fetch('data/demo-areas.json').then((r) => r.json()),
+    fetch('data/routes/routes.json').then((r) => r.json()).catch(() => null),
   ]);
 
   state.region = regions.regions[regions.defaultRegion];
   state.years = floodIndex.years;
   state.places = placesFile.places;
   state.demoAreas = demoFile.areas;
+  state.routes = routesFile;
   state.yearIndex = state.years.findIndex((y) => y.key === 'today');
   if (state.yearIndex < 0) state.yearIndex = state.years.length - 1;
 
@@ -62,6 +66,7 @@ async function boot() {
   loadExposure();
   buildTicks();
   buildPresets();
+  buildRoutePanel();
 
   await mapApi.initMap('map', state.region);
   mapApi.ensureCoverage();
@@ -136,6 +141,80 @@ function buildPresets() {
   }
 }
 
+// ---------------------------------------------------------------- route panel (PS 1.1)
+function buildRoutePanel() {
+  const originSel = $('route-origin');
+  const roleSel = $('route-role');
+  if (!originSel || !state.routes) {
+    if ($('routes-panel')) $('routes-panel').hidden = true;
+    return;
+  }
+  originSel.innerHTML = '';
+  for (const origin of state.routes.origins) {
+    const option = document.createElement('option');
+    option.value = origin.id;
+    option.textContent = origin.label;
+    originSel.appendChild(option);
+  }
+  originSel.addEventListener('change', updateRouteBox);
+  roleSel.addEventListener('change', updateRouteBox);
+}
+
+function updateRouteYear() {
+  const year = state.years[state.yearIndex];
+  if (year && $('route-year')) $('route-year').textContent = year.label.split('—')[0].trim().toLowerCase();
+}
+
+function findRoutePair(originId, role, yearKey) {
+  if (!state.routes) return null;
+  const shortest = state.routes.routes.find((r) => r.origin === originId && r.role === role && r.year === yearKey && r.mode === 'shortest');
+  const risk = state.routes.routes.find((r) => r.origin === originId && r.role === role && r.year === yearKey && r.mode === 'least-risk');
+  if (!shortest || !risk) return null;
+  return { shortest, risk };
+}
+
+function updateRouteBox() {
+  const originSel = $('route-origin');
+  const roleSel = $('route-role');
+  const box = $('route-box');
+  const missing = $('route-missing');
+  if (!originSel || !state.routes) return;
+  const yearKey = state.years[state.yearIndex].key;
+  const pair = findRoutePair(originSel.value, roleSel.value, yearKey);
+  mapApi.setRoutes(null);
+  if (!pair) {
+    box.hidden = true;
+    missing.hidden = false;
+    return;
+  }
+  missing.hidden = true;
+  box.hidden = false;
+
+  const asLine = (route) => ({
+    type: 'Feature',
+    properties: {},
+    geometry: { type: 'LineString', coordinates: route.edges.map((e) => [e.c[0], e.c[1]]).concat([[route.edges[route.edges.length - 1].c[2], route.edges[route.edges.length - 1].c[3]]]) },
+  });
+  const destFeature = {
+    type: 'Feature',
+    properties: { name: pair.risk.dest.name || pair.risk.dest.kind },
+    geometry: { type: 'Point', coordinates: pair.risk.dest.lonLat },
+  };
+  mapApi.setRoutes(asLine(pair.risk), asLine(pair.shortest), destFeature);
+
+  const severeSaved = pair.shortest.severeKm - pair.risk.severeKm;
+  $('route-shortest-text').textContent =
+    `shortest: ${pair.shortest.km} km to ${pair.shortest.dest.name || pair.shortest.dest.kind} — ${pair.shortest.severeKm} km of it in ≥ 0.6 m water`;
+  $('route-risk-text').textContent =
+    `least-risk: ${pair.risk.km} km to ${pair.risk.dest.name || pair.risk.dest.kind} — ${pair.risk.severeKm} km in ≥ 0.6 m water`;
+  const extra = (pair.risk.km - pair.shortest.km).toFixed(1);
+  $('route-verdict').textContent = severeSaved > 0.05
+    ? `The safe route adds ${extra} km and keeps ${(severeSaved).toFixed(1)} km of waist-deep street out of the trip.`
+    : (severeSaved < -0.05
+      ? 'Both routes wade the same water this year — the least-risk path costs nothing to prefer.'
+      : 'Both routes clear the water this year.');
+}
+
 // ---------------------------------------------------------------- wiring
 function wire() {
   const map = mapApi.getMap();
@@ -191,10 +270,31 @@ function wire() {
     mapApi.setRiskGridVisible(state.grid);
   });
 
+  const mhBtn = $('toggle-multihazard');
+  if (mhBtn) {
+    mhBtn.addEventListener('click', () => {
+      state.multiHazard = !state.multiHazard;
+      setPressed('toggle-multihazard', state.multiHazard);
+      mapApi.setMultiHazardVisible(state.multiHazard);
+      $('mode-note').textContent = state.multiHazard
+        ? 'Multi-hazard index (PS 1.1): 45% flood hazard + 40% landslide susceptibility + 15% built exposure, per 100 m cell.'
+        : 'Each square is a 100 m cell. Colours are pre-computed risk, so the whole city is already scored before you click.';
+      updateScorePanel();
+    });
+  }
+
   $('toggle-theme').addEventListener('click', async () => {
     state.theme = state.theme === 'dark' ? 'light' : 'dark';
     setPressed('toggle-theme', state.theme === 'light');
     await mapApi.setTheme(state.theme);
+    // A style swap recreates every source with empty data — re-push what is already cached
+    // (instant, no refetch) so the flood layer, pin and route lines survive the theme toggle.
+    const year = state.years[state.yearIndex];
+    await mapApi.showYear(year.key);
+    await mapApi.showMeasured(year.key === 'today');
+    await mapApi.ensureCoverage();
+    if (state.lon !== null) mapApi.setPin(state.lon, state.lat);
+    updateRouteBox();
   });
 
   $('recenter-button').addEventListener('click', () => {
@@ -207,12 +307,13 @@ function wire() {
   });
 
   window.addEventListener('keydown', (event) => {
-    if (event.target.tagName === 'INPUT') return;
+    if (event.target.tagName === 'INPUT' || event.target.tagName === 'SELECT') return;
     if (event.key === 'ArrowRight') selectYear(Math.min(state.years.length - 1, state.yearIndex + 1));
     if (event.key === 'ArrowLeft') selectYear(Math.max(0, state.yearIndex - 1));
     if (event.key === '3') $('toggle-3d').click();
     if (event.key.toLowerCase() === 'w') $('toggle-wetlands').click();
     if (event.key.toLowerCase() === 'g') $('toggle-grid').click();
+    if (event.key.toLowerCase() === 'm' && $('toggle-multihazard')) $('toggle-multihazard').click();
     if (event.key.toLowerCase() === 'l') $('toggle-theme').click();
     if (event.key === ' ') { event.preventDefault(); togglePlay(); }
   });
@@ -254,7 +355,7 @@ function haversineKm(lon1, lat1, lon2, lat2) {
   const R = 6371;
   const dLat = ((lat2 - lat1) * Math.PI) / 180;
   const dLon = ((lon2 - lon1) * Math.PI) / 180;
-  const a = Math.sin(dLat / 2) ** 2 + Math.cos((lat1 * Math.PI) / 180) * Math.cos((lat2 * Math.PI) / 180) * Math.sin(dLon / 2) ** 2;
+  const a = Math.sin(dLat / 2) ** 2 + Math.cos(lat1 * Math.PI / 180) * Math.cos(lat2 * Math.PI / 180) * Math.sin(dLon / 2) ** 2;
   return 2 * R * Math.asin(Math.sqrt(a));
 }
 
@@ -426,6 +527,8 @@ async function selectYear(index) {
   await mapApi.showMeasured(year.key === 'today');
   await mapApi.refreshRiskGrid({ yearIndex: clamped, wetlands: state.wetlands });
   updateScorePanel();
+  updateRouteYear();
+  updateRouteBox();
 }
 
 function receiptFor(year) {
@@ -464,6 +567,7 @@ function updateScorePanel() {
     $('fact-depth').textContent = '–';
     $('fact-rain').textContent = '–';
     $('wetland-note').hidden = true;
+    resetMh(cell);
     return;
   }
 
@@ -531,6 +635,11 @@ function updateScorePanel() {
       ? `${cell.crit} in this cell`
       : 'none in this cell';
   }
+  const slLine = $('fact-sl');
+  if (slLine) {
+    slLine.textContent = `${Math.round((cell.lh ?? 0) * 100) / 100} · ${describeSlope(cell.lh ?? 0)}`;
+  }
+  updateMh(cell, yearIndex, result);
 
   const note = $('wetland-note');
   if (state.wetlands && cell.wetland > 0) {
@@ -543,6 +652,43 @@ function updateScorePanel() {
   } else {
     note.hidden = true;
   }
+}
+
+// ---------------------------------------------------------------- multi-hazard readout (PS 1.1)
+function mhIndex(cell, yearIndex) {
+  return 10 * (0.45 * (cell.hazard[yearIndex] ?? 0) + 0.4 * (cell.lh ?? 0) + 0.15 * (cell.expo ?? 0));
+}
+
+function describeSlope(lh) {
+  if (lh <= 0.005) return 'flat ground';
+  if (lh < 0.34) return 'gentle rise';
+  return 'steep cell';
+}
+
+function updateMh(cell, yearIndex, result) {
+  const row = $('mh-row');
+  if (!row) return;
+  row.hidden = false;
+  const mh = mhIndex(cell, yearIndex);
+  const band = score.riskBand(mh);
+  const dial = $('mh-dial');
+  const c = 2 * Math.PI * 11;
+  dial.style.strokeDasharray = String(c);
+  dial.style.strokeDashoffset = String(c * (1 - Math.min(1, mh / 10)));
+  dial.style.stroke = band.color;
+  $('mh-value').textContent = mh.toFixed(1);
+  const note = $('mh-note');
+  note.hidden = !state.multiHazard;
+  if (state.multiHazard) {
+    note.textContent = `flood hazard ${(result.hazard * 10).toFixed(1)} × 0.45 · landslide ${((cell.lh ?? 0) * 10).toFixed(1)} × 0.40 · built ${((cell.expo ?? 0) * 10).toFixed(1)} × 0.15`;
+  }
+}
+
+function resetMh() {
+  const row = $('mh-row');
+  if (row) row.hidden = true;
+  const note = $('mh-note');
+  if (note) note.hidden = true;
 }
 
 function setBar(barId, valueId, share, label, color) {
@@ -562,6 +708,9 @@ function resetBars() {
   if (popEl) popEl.textContent = '–';
   const critEl = $('fact-crit');
   if (critEl) critEl.textContent = '–';
+  const slEl = $('fact-sl');
+  if (slEl) slEl.textContent = '–';
+  resetMh();
 }
 
 function updateRecenter() {

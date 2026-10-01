@@ -1,0 +1,86 @@
+{
+  "built": "2026-10-01T04:12:41.656Z",
+  "region": "chennai",
+  "weights": {
+    "floodHazard": 0.45,
+    "landslide": 0.4,
+    "exposure": 0.15
+  },
+  "formula": "MH = 10 * (0.45*hazard + 0.40*landslide + 0.15*exposure), computed per cell in the browser for every year",
+  "susceptibility": {
+    "lowBelowDeg": 3,
+    "highAboveDeg": 15,
+    "method": "Zevenbergen-Thorne slope on the baked elevation grid"
+  },
+  "classes": [
+    {
+      "label": "low",
+      "below": 2.5
+    },
+    {
+      "label": "moderate",
+      "below": 5
+    },
+    {
+      "label": "high",
+      "below": 7.5
+    },
+    {
+      "label": "very high",
+      "below": null
+    }
+  ],
+  "honesty": "Chennai is coastal plain: landslide susceptibility is ~0 nearly everywhere. The layer proves the multi-hazard framework and re-targets to hilly cities unchanged.",
+  "byYear": [
+    {
+      "key": "2005",
+      "label": "2005 — GCC flood extent",
+      "counts": {
+        "low": 205452,
+        "moderate": 1836,
+        "high": 3,
+        "very high": 0
+      }
+    },
+    {
+      "key": "2015",
+      "label": "2015 — NRSC flood inundation zone",
+      "counts": {
+        "low": 205315,
+        "moderate": 1967,
+        "high": 9,
+        "very high": 0
+      }
+    },
+    {
+      "key": "2020",
+      "label": "2020 — Cyclone Nivar hotspots",
+      "counts": {
+        "low": 206619,
+        "moderate": 672,
+        "high": 0,
+        "very high": 0
+      }
+    },
+    {
+      "key": "today",
+      "label": "Today — city flood hazard zoning",
+      "counts": {
+        "low": 205131,
+        "moderate": 2151,
+        "high": 9,
+        "very high": 0
+      }
+    },
+    {
+      "key": "2070",
+      "label": "2070 — 200-year return period corridors",
+      "counts": {
+        "low": 204165,
+        "moderate": 3125,
+        "high": 1,
+        "very high": 0
+      }
+    }
+  ]
+}

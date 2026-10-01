@@ -100,6 +100,7 @@ export function readCell(tile, index) {
     bldc: num(F.BLDC),
     roadd: num(F.ROADD),
     crit: num(F.CRIT),
+    lh: (num(F.LH) ?? 0) / 100,
     years: tile.years,
   };
 }

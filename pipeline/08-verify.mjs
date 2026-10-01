@@ -98,6 +98,41 @@ if (!exposure) {
   }
 }
 
+// ---------------------------------------------------------------- 4c. PS 1.1: routes + multi-hazard
+const routesFile = exists('data/routes/routes.json') ? readJson('data/routes/routes.json') : null;
+if (!routesFile) {
+  problems.push('missing data/routes/routes.json — run pipeline/14-route-graph.mjs');
+} else {
+  const risk = routesFile.routes.filter((r) => r.mode === 'least-risk').length;
+  const short = routesFile.routes.filter((r) => r.mode === 'shortest').length;
+  if (!routesFile.origins?.length) problems.push('routes.json has no origins');
+  else if (risk === 0 || risk !== short) problems.push(`routes.json incomplete: ${risk} least-risk vs ${short} shortest`);
+  else {
+    const today = routesFile.routes.filter((r) => r.year === 'today' && r.mode === 'shortest');
+    const worstSevere = today.length ? Math.max(...today.map((r) => r.severeKm)) : 0;
+    ok.push(`${routesFile.origins.length} origins × hospitals+shelters × ${routesFile.years.length} years: ${routesFile.routes.length} baked routes (worst shortest-route severe leg today: ${worstSevere} km in ≥0.6 m water)`);
+  }
+  for (const r of routesFile.routes) {
+    if (!r.edges?.length || !r.dest?.lonLat) { problems.push(`route ${r.origin}/${r.year}/${r.mode}/${r.role} is malformed`); break; }
+  }
+}
+const graphMeta = exists('data/routes/graph-meta.json') ? readJson('data/routes/graph-meta.json') : null;
+if (!graphMeta) {
+  problems.push('missing data/routes/graph-meta.json — run pipeline/14-route-graph.mjs');
+} else if ((graphMeta.edges ?? 0) < 1000) {
+  problems.push(`route graph too small: ${graphMeta.edges} edges`);
+} else {
+  ok.push(`route graph: ${graphMeta.nodes.toLocaleString('en-IN')} nodes · ${graphMeta.edges.toLocaleString('en-IN')} edge pairs · ${graphMeta.hospitals.toLocaleString('en-IN')} hospitals · ${graphMeta.shelters.toLocaleString('en-IN')} shelters`);
+}
+const mhFile = exists('data/multihazard.json') ? readJson('data/multihazard.json') : null;
+if (!mhFile) {
+  problems.push('missing data/multihazard.json — run pipeline/13-multihazard.mjs');
+} else if (!scoreIndex || (scoreIndex.fieldCount ?? 0) < 26) {
+  problems.push('score tiles lack the LH landslide field — run pipeline/13-multihazard.mjs');
+} else {
+  ok.push(`multi-hazard MCDM: weights ${mhFile.weights.floodHazard}/${mhFile.weights.landslide}/${mhFile.weights.exposure} (flood/landslide/exposure), per-year counts for ${mhFile.byYear?.length ?? 0} years`);
+}
+
 // Spot-check score tiles: right length, right field count, a real spread of scores.
 const expectedLength = (scoreIndex?.cellsPerTile ?? 24) ** 2 * (scoreIndex?.fieldCount ?? 21);
 const sample = [];
